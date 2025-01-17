@@ -24,3 +24,6 @@ encrypter ceasar enc -k "key to encryption" -size 2048 < \path\to\file.txt > \pa
 encrypter ceasar dec -k "key to encryption" -size 2048 < \path\to\encrypted.txt > \path\to\decrypted.txt
 ```
 Для успешного обратного преобразования, значения опций `-k` и `-size` должны повторять значения при шифровании файла `encrypted.txt`.
+
+## Сборка
+На данный момент достаточным для сборки будет Microsoft Visual Studio 2022: выбрать конфигурацию **Release**, далее **Сборка** =>  **Собрать решение**. Исполняемый файл будет по пути `./x64/Realese/encrypter.exe`, примеры использования которого описаны выше.
