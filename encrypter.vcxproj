@@ -189,10 +189,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ceaser.cpp" />
-    <ClCompile Include="deletethis.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='test_with_param|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="SetAlgoritm.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>

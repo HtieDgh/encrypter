@@ -59,7 +59,6 @@ void encrypt::Ceaser::run()
 		//debug cout << setw(3) << _d << "= " << std::bitset<8>(_dec) << "|" << _dec;
 
 		// ÎÁÐÀÁÎÒÊÀ
-		if (_dec == '\0' || _dec == '\n') { _done = true; continue; }
 		if (_mode) {//ÐÀÑØÈÔÐÎÂÊÀ
 			_dec -= _key[_kd++];
 		}else {//ØÈÔÐÎÂÊÀ
