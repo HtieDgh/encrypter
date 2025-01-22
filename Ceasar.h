@@ -1,24 +1,23 @@
 #pragma once
 #include"Algoritm.h"
 namespace encrypt {
-	class Ceaser : public Algoritm
+	class Ceasar : public Algorithm
 	{
 	private:
 		bool _done;		//Статус шифрования
 		bool _mode;		//true если требуется расшифровать
 		int _d, _kd;	//смещение данных и ключа
-		char* _key;		//Указатель на ключ
+		const char* _key;		//Указатель на ключ
 		char _dec;		//Промежуточный результат шифрования 1 байта
-		char _enc;		//Байт готовый к шифрованию
-		int _maxsize;//Макс размер в байтах после которого следует остановить шифрование
+		size_t _maxsize;//Макс размер в байтах после которого следует остановить шифрование
 	public:
-		Ceaser();
-		Ceaser(char* _key, size_t maxsize);
-		~Ceaser();
+		Ceasar();
+		Ceasar(char* _key, size_t maxsize);
+		~Ceasar();
 
-		char* key() const;
+		const char* key() const;
 		size_t maxsize() const;
-		void key(char* _key);
+		void key(const char* _key);
 		void maxsize(int maxsize);
 
 		void run() override;

@@ -188,14 +188,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Ceaser.cpp" />
-    <ClCompile Include="SetAlgoritm.cpp" />
+    <ClCompile Include="Algoritm.cpp" />
+    <ClCompile Include="Ceasar.cpp" />
+    <ClCompile Include="OutputStrategy.cpp" />
+    <ClCompile Include="AlgorithmStrategy.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ceaser.h" />
+    <ClInclude Include="Ceasar.h" />
     <ClInclude Include="Algoritm.h" />
-    <ClInclude Include="SetAlgoritm.h" />
+    <ClInclude Include="OutputStrategy.h" />
+    <ClInclude Include="AlgorithmStrategy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
