@@ -18,7 +18,7 @@ namespace encrypt {
 		const char* key() const;
 		size_t maxsize() const;
 		void key(const char* _key);
-		void maxsize(int maxsize);
+		void maxsize(size_t maxsize);
 
 		void run() override;
 		bool mode() const override;

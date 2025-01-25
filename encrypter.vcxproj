@@ -190,6 +190,7 @@
   <ItemGroup>
     <ClCompile Include="Algoritm.cpp" />
     <ClCompile Include="Ceasar.cpp" />
+    <ClCompile Include="InputStrategy.cpp" />
     <ClCompile Include="OutputStrategy.cpp" />
     <ClCompile Include="AlgorithmStrategy.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -197,6 +198,7 @@
   <ItemGroup>
     <ClInclude Include="Ceasar.h" />
     <ClInclude Include="Algoritm.h" />
+    <ClInclude Include="InputStrategy.h" />
     <ClInclude Include="OutputStrategy.h" />
     <ClInclude Include="AlgorithmStrategy.h" />
   </ItemGroup>

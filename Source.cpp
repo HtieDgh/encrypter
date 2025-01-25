@@ -19,12 +19,16 @@ void readme(std::ostream& out) {
 }
 void Creadme(std::ostream& out) {
 	out << "Использование ceasar:\n"
-		<<"\tencrypter ceasar enc - k \"key to encrypt\" -size 10 -of \\path\\to\\encrypted.txt\n < \\path\\to\\file.txt"
-		<<"или\n"
-		<<"\tencrypter ceasar dec -k \"key to decrypt\" -size 10 -of \\path\\to\\decrypted.txt < path\\to\\encrypted.txt\n";
+		<< "\tencrypter ceasar enc -k \"key to encrypt\" -size 10 -of \\path\\to\\encrypted.txt -if \\path\\to\\file.txt\n"
+		<< "\n"
+		<< "или\n"
+		<< "\n"
+		<< "\tencrypter ceasar dec -k \"key to decrypt\" -size 10 -of \\path\\to\\decrypted.txt -if path\\to\\encrypted.txt\n"
+		<< "\n"
+		<< "Для консольного ввода вывода ключи `-if` и `-of` можно не указывать:\n"
+		<< "\n"
+		<< "\tencrypter ceasar {dec|enc} -k \"key to decrypt\"";
 }
-
-
 
 
 int main(int argc, char* argv[], char* envp[]){
@@ -33,32 +37,39 @@ int main(int argc, char* argv[], char* envp[]){
 	size_t inSize = 100;
 	AlgorithmStrategy* controller=new AlgorithmStrategy();
 	map<string,const char*> params;
-	//ОПРЕДЕЛЕНИЕ ПАРАМЕТРОВ И ЗНАЧЕНИЙ
+	//ОПРЕДЕЛЕНИЕ ПАРАМЕТРОВ И ИХ ЗНАЧЕНИЙ
 	for (int i = 3; i < argc; i++) {
-		if (argv[i][0] == '-' && i + 1 < argc && argv[i + 1][0] != '-') {
+		if (argv[i][0] == '-' && i + 1 < argc && argv[i + 1][0] != '-')
+		{
 		// параметр со значением
 			params[argv[i]] = argv[i + 1];
 		}
-		else if (argv[i][0] == '-') {
+		else if (argv[i][0] == '-')
+		{
 		// параметр без значения, например флаг
 			params[argv[i]] = "";
 		}
 	}
-	if (argc <= 1) {
+	//ВЫВОД СПРАВКИ
+	if (argc <= 2)
+	{
 		readme(cout);
 		return 0;
 	} 
 
+	// АГЛОРИТМ ЦЕЗАРЯ
 	if (!strcmp(argv[1], "ceasar")) {
 		Ceasar* alg = new Ceasar();
 		controller->setAlgorithm(alg);
 
-		if (!strcmp(argv[2], "enc")) {
+		if (!strcmp(argv[2], "enc")) 
+		{
 			alg->mode(false);
-		}
-		else if (!strcmp(argv[2], "dec")) {
+		} 
+		else if (!strcmp(argv[2], "dec")) 
+		{
 			alg->mode(true);
-		}else {
+		} else {
 			Creadme(cout);
 			return 0;
 		}
@@ -79,7 +90,8 @@ int main(int argc, char* argv[], char* envp[]){
 			}
 
 			alg->maxsize(atoi(params["-size"])); //atoi() переводит char* в int
-
+			
+			// НАЗНАЧЕНИЕ ВЫВОДА
 			if (params.count("-of") == 0)
 			{
 				// По умолчанию вывод в stdout
@@ -89,6 +101,16 @@ int main(int argc, char* argv[], char* envp[]){
 				alg->setOutput(new FileOutput(params["-of"]));
 			}
 
+			// НАЗНАЧЕНИЕ ВВОДА
+			if (params.count("-if") == 0) 
+			{
+				// По умолчанию вывод в stdout
+				alg->setInput(new StdoutInput());
+			} else {
+				// Путь до файла назначен, ввод из файла
+				alg->setInput(new FileInput(params["-if"]));
+			}
+		
 			// ВЫПОЛНЕНИЕ КОМАНДЫ
 			alg->run();
 			return 0;
@@ -98,5 +120,8 @@ int main(int argc, char* argv[], char* envp[]){
 			cerr << e.what() << endl;
 			Creadme(cout);
 		}
+	} else {
+		readme(cout);
+		return 0;
 	}
 }

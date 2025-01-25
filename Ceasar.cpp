@@ -43,7 +43,7 @@ void encrypt::Ceasar::key(const char* _key)
 	this->_key = _key;
 }
 
-void encrypt::Ceasar::maxsize(int maxsize)
+void encrypt::Ceasar::maxsize(size_t maxsize)
 {
 	this->_maxsize = maxsize;
 }
@@ -55,9 +55,7 @@ void encrypt::Ceasar::run()
 	{
 		count++;
 		// ВВОД
-		if (!cin.get(_dec)) {
-			throw std::runtime_error("input file is ended");
-		};
+		this->_if->read(&_dec);
 		//debug cout << setw(3) << _d << "= " << std::bitset<8>(_dec) << "|" << _dec;
 
 		// ОБРАБОТКА
@@ -68,7 +66,7 @@ void encrypt::Ceasar::run()
 		}
 
 		// ВЫВОД
-		this->_view->write(&_dec);
+		this->_of->write(&_dec);
 
 		// СМЕНА ИТЕРАЦИИ _maxsize - количество байт которые надо считать с потока ввода
 		if (++_d == _maxsize) {

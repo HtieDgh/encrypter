@@ -1,11 +1,6 @@
 #include "OutputStrategy.h"
 
-void encrypt::StdoutOutput::write(char* data)
-{
-	std::cout << *data;
-}
-
-void encrypt::StdoutOutput::write(char* data, std::streamsize size = 1)
+void encrypt::StdoutOutput::write(char* data, std::streamsize size)
 {
 	std::cout.write(data, size);
 }
@@ -18,10 +13,10 @@ encrypt::FileOutput::FileOutput(const char* path, std::ios_base::open_mode openT
 	}
 }
 
-void encrypt::FileOutput::write(char* data)
+void encrypt::FileOutput::write(char* data, std::streamsize size)
 {
 	if (this->fout.is_open()) {
-		this->fout.write(data,1);
+		this->fout.write(data, size);
 	}
 	else {
 		throw std::runtime_error("Failed to write file: file is not exist?");
