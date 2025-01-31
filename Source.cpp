@@ -20,39 +20,19 @@
 #include<Windows.h>
 #include<map>
 #include "Ceasar.h"
+#include "XTEA.h"
 #include "AlgorithmStrategy.h"
 
 using namespace std;
 using namespace encrypt;
-#define README_PATH ""
-
-// ОБРАБОТКА АЛГОРИТМОМ ЦЕЗАРЯ
-
-// ВЫВОД СПРАВКИ
-void readme(std::ostream& out) {
-	out << "Использование: encrypter {Имя алгоритма} {dec|enc} [опции] < \\path\\to\\file.txt > \\path\\to\\encrypted.txt\n";
-}
-void Creadme(std::ostream& out) {
-	out << "Использование ceasar:\n"
-		<< "\tencrypter ceasar enc -k \"key to encrypt\" -size 10 -of \\path\\to\\encrypted.txt -if \\path\\to\\file.txt\n"
-		<< "\n"
-		<< "или\n"
-		<< "\n"
-		<< "\tencrypter ceasar dec -k \"key to decrypt\" -size 10 -of \\path\\to\\decrypted.txt -if path\\to\\encrypted.txt\n"
-		<< "\n"
-		<< "Для консольного ввода вывода ключи `-if` и `-of` можно не указывать:\n"
-		<< "\n"
-		<< "\tencrypter ceasar {dec|enc} -k \"key to decrypt\"";
-}
-
 
 int main(int argc, char* argv[], char* envp[]){
 	setlocale(LC_ALL, ".1251");
 	SetConsoleCP(1251);
-	size_t inSize = 100;
 	AlgorithmStrategy* controller=new AlgorithmStrategy();
+	StderrOutput* errout = new StderrOutput();
 	map<string,const char*> params;
-	//ОПРЕДЕЛЕНИЕ ПАРАМЕТРОВ И ИХ ЗНАЧЕНИЙ
+	// ОПРЕДЕЛЕНИЕ ПАРАМЕТРОВ И ИХ ЗНАЧЕНИЙ
 	for (int i = 3; i < argc; i++) {
 		if (argv[i][0] == '-' && i + 1 < argc && argv[i + 1][0] != '-')
 		{
@@ -65,78 +45,36 @@ int main(int argc, char* argv[], char* envp[]){
 			params[argv[i]] = "";
 		}
 	}
-	//ВЫВОД СПРАВКИ
+	// ВЫВОД СПРАВКИ ПРИ НЕДОСТАТКЕ АРГУМЕНТОВ
 	if (argc <= 2)
 	{
-		readme(cout);
+		controller->readme(errout);
+		delete controller;
 		return 0;
 	} 
+	Algorithm* alg;
 
-	// АГЛОРИТМ ЦЕЗАРЯ
-	if (!strcmp(argv[1], "ceasar")) {
-		Ceasar* alg = new Ceasar();
+	// ПОДГОТОВКА К ВЫПОЛНЕНИЮ: НАСТРОЙКА РЕЖИМА В КОНСТРУКТОРАХ КЛАССОВ-РЕАЛИЗАЦИЙ АЛГОРИТМАОВ
+	if (!strcmp(argv[1], "ceasar"))			// АГЛОРИТМ ЦЕЗАРЯ
+	{
+		
+		alg = new Ceasar(argv[2],params, errout);
+	
+		// Подтверждение алгоритма
 		controller->setAlgorithm(alg);
 
-		if (!strcmp(argv[2], "enc")) 
-		{
-			alg->mode(false);
-		} 
-		else if (!strcmp(argv[2], "dec")) 
-		{
-			alg->mode(true);
-		} else {
-			Creadme(cout);
-			return 0;
-		}
+	} else if (!strcmp(argv[1], "xtea"))	// XTEA
+	{
+		alg = new XTEA(argv[2], params, errout);
 
-	// ОБРАБОТКА ПАРАМЕТРОВ КОМАНДНОЙ СТРОКИ И ПОДГОТОВКА К ВЫПОЛНЕНИЮ
-		try
-		{
-			if (params.count("-k") == 0)
-			{
-				throw std::logic_error("Параметр -k не задан");
-			}
+		// Подтверждение алгоритма
+		controller->setAlgorithm(alg);
 
-			alg->key(params["-k"]);
-
-			if (params.count("-size") == 0)
-			{
-				throw std::logic_error("Параметр -size не задан");
-			}
-
-			alg->maxsize(atoi(params["-size"])); //atoi() переводит char* в int
-			
-			// НАЗНАЧЕНИЕ ВЫВОДА
-			if (params.count("-of") == 0)
-			{
-				// По умолчанию вывод в stdout
-				alg->setOutput(new StdoutOutput());
-			} else {
-				// Путь до файла назначен, вывод в этот файл
-				alg->setOutput(new FileOutput(params["-of"]));
-			}
-
-			// НАЗНАЧЕНИЕ ВВОДА
-			if (params.count("-if") == 0) 
-			{
-				// По умолчанию вывод в stdout
-				alg->setInput(new StdoutInput());
-			} else {
-				// Путь до файла назначен, ввод из файла
-				alg->setInput(new FileInput(params["-if"]));
-			}
-		
-			// ВЫПОЛНЕНИЕ КОМАНДЫ
-			alg->run();
-			return 0;
-		}
-		catch (const std::exception& e)
-		{
-			cerr << e.what() << endl;
-			Creadme(cout);
-		}
-	} else {
-		readme(cout);
-		return 0;
+	}else{
+		controller->readme(errout);
 	}
+	// ВЫПОЛНЕНИЕ АЛГОРИТМА
+	controller->doAlgorithm();
+	delete controller;
+	return 0;
 }

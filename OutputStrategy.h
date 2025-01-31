@@ -23,12 +23,17 @@ namespace encrypt {
 		virtual ~OutputStrategy() = default;
 		virtual void write(char* data, std::streamsize size = 1) = 0;
 	};
+
 	class StdoutOutput : public OutputStrategy {
 	public:
 		void write(char* data, std::streamsize size = 1) override;
-		
-
 	};
+
+	class StderrOutput : public OutputStrategy {
+	public:
+		void write(char* data, std::streamsize size = 1) override;
+	};
+
 	class FileOutput : public OutputStrategy {
 	private:
 		std::ofstream fout;
@@ -38,4 +43,4 @@ namespace encrypt {
 		void write(char* data, std::streamsize size = 1) override;
 		~FileOutput();
 	};
-}
+};

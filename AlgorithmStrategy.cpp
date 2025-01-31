@@ -14,7 +14,7 @@
    limitations under the License.
 */
 #include "AlgorithmStrategy.h"
-
+#include<sstream>
 void encrypt::AlgorithmStrategy::setAlgorithm(Algorithm* alg)
 {
 	this->_alg = alg;
@@ -26,5 +26,20 @@ void encrypt::AlgorithmStrategy::doAlgorithm()
 }
 encrypt::AlgorithmStrategy::~AlgorithmStrategy()
 {
-	delete _alg;
+	if(_alg) delete _alg;
 };
+void encrypt::AlgorithmStrategy::readme(OutputStrategy* out)
+{
+	std::stringstream s;
+	s << "Использование:\n"
+		<< "\n"
+		<< "encrypter {имя алгоритма} {команда} [опции] -if \\path\\to\\input.txt -of \\path\\to\\output.txt\n"
+		<< "\n"
+		<< "Примечание:\n"
+		<< "\t{имя алгоритма} например ceasar\n"
+		<< "\t{команда} и ее [опции] зависят от алгоритма, попробуйте изучить, например:\n"
+		<< "\n"
+		<< "\tencrypter ceasar -?";
+	  
+	out->write((char*)s.str().c_str(), s.str().size());
+}

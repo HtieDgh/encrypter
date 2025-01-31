@@ -16,6 +16,7 @@
 #include "Ceasar.h"
 #include<iostream>
 #include<iomanip>
+#include<sstream>
 #include<bitset> // для двоичного представления числа
 using namespace std;
 
@@ -27,15 +28,64 @@ encrypt::Ceasar::Ceasar()
 	this->key(new char[8] {"default"});
 	_dec = 0;
 	this->maxsize(-1);
+	this->setErrOutput(new StderrOutput());
 }
 
-encrypt::Ceasar::Ceasar(char* _key, size_t maxsize)
+encrypt::Ceasar::Ceasar(char* modename, std::map<string, const char*>& const params, OutputStrategy* const errout)
 {
-	_done = false;
-	_d = 0, _kd = 0;
-	this->key(_key);
-	_dec = 0;
-	this->maxsize(maxsize);
+	this->setErrOutput(errout);
+	try
+	{
+		if (!strcmp(modename, "enc"))
+		{
+			this->mode(false);
+		} else if (!strcmp(modename, "dec"))
+		{
+			this->mode(true);
+		} else if (!strcmp(modename, "-?") || !strcmp(modename, "-help")) {
+			throw std::logic_error("Вывод справки по использованию:\n");
+		} else {
+			throw std::logic_error("Такого режима не существует");
+		}
+
+		if (params.count("-k") == 0)
+		{
+			throw std::logic_error("Параметр -k не задан");
+		}
+
+		this->key(params["-k"]);
+
+		if (params.count("-size") == 0)
+		{
+			throw std::logic_error("Параметр -size не задан");
+		}
+
+		this->maxsize(atoi(params["-size"])); //atoi() переводит char* в int
+
+		// НАЗНАЧЕНИЕ ВЫВОДА
+		if (params.count("-of") == 0)
+		{
+			// По умолчанию вывод в stdout
+			this->setOutput(new StdoutOutput());
+		} else {
+			// Путь до файла назначен, вывод в этот файл
+			this->setOutput(new FileOutput(params["-of"]));
+		}
+
+		// НАЗНАЧЕНИЕ ВВОДА
+		if (params.count("-if") == 0)
+		{
+			// По умолчанию вывод в stdout
+			this->setInput(new StdoutInput());
+		} else {
+			// Путь до файла назначен, ввод из файла
+			this->setInput(new FileInput(params["-if"]));
+		}
+	} catch (const std::exception& e)
+	{
+		this->_ef->write((char*)e.what(),strlen(e.what()));
+		this->readme();
+	}
 }
 
 encrypt::Ceasar::~Ceasar()
@@ -65,28 +115,31 @@ void encrypt::Ceasar::maxsize(size_t maxsize)
 
 void encrypt::Ceasar::run()
 {
-	size_t count = 0;
-	while (!_done)
-	{
-		count++;
-		// ВВОД
-		this->_if->read(&_dec);
-		//debug cout << setw(3) << _d << "= " << std::bitset<8>(_dec) << "|" << _dec;
+	try {
+		while (!_done)
+		{
+			// ВВОД
+			this->_if->read(&_dec);
 
-		// ОБРАБОТКА
-		_dec += ( _mode ? -1 : 1)*_key[_kd++];
+			// ОБРАБОТКА
+			_dec += ( _mode ? -1 : 1)*_key[_kd++];
 		
-		if (_kd == strlen(_key)) {
-			_kd = 0;
-		}
+			if (_kd == strlen(_key)) {
+				_kd = 0;
+			}
 
-		// ВЫВОД
-		this->_of->write(&_dec);
+			// ВЫВОД
+			this->_of->write(&_dec);
 
-		// СМЕНА ИТЕРАЦИИ _maxsize - количество байт которые надо считать с потока ввода
-		if (++_d == _maxsize) {
-			_done = true;
+			// СМЕНА ИТЕРАЦИИ _maxsize - количество байт которые надо считать с потока ввода
+			if (++_d == _maxsize) {
+				_done = true;
+			}
 		}
+	} catch (const std::exception& e)
+	{
+		cerr << e.what() << endl;
+		this->readme();
 	}
 }
 
@@ -98,4 +151,23 @@ bool encrypt::Ceasar::mode() const
 void encrypt::Ceasar::mode(bool isEnc)
 {
 	this->_mode = isEnc;
+}
+
+void encrypt::Ceasar::readme()
+{
+	stringstream s;
+	s << "Для того, чтобы зашифровать файл выполните:\n"
+		<< "\n"
+		<< "\tencrypter ceasar enc -k \"key to encrypt\" -size 10 -of \\path\\to\\encrypted.txt -if \\path\\to\\file.txt\n"
+		<< "\n"
+		<< "Для расшифровки:\n"
+		<< "\n"
+		<< "\tencrypter ceasar dec -k \"key to decrypt\" -size 10 -of \\path\\to\\decrypted.txt -if path\\to\\encrypted.txt\n"
+		<< "\n"
+		<< "Для консольного ввода вывода опции `-if` и `-of` можно не указывать:\n"
+		<< "\n"
+		<< "\tencrypter ceasar {dec|enc} -k \"key to decrypt\"\n"
+		<< "\n"
+		<< "Для корректной расшифровки опции -size и -k должны повторять значения при шифровании\n";
+	this->_ef->write((char*)s.str().c_str(), s.str().size());
 }

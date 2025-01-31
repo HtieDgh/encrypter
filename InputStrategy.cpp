@@ -24,7 +24,7 @@ encrypt::FileInput::FileInput(const char* path,std::ios_base::open_mode openType
 {
 	this->fin.open(path, openType);
 	if (!this->fin.is_open()) {
-		throw std::runtime_error((const std::string)"Failed to open file: " + path);
+		throw std::runtime_error((const std::string)"Failed to open file: " + path+'\n');
 	}
 }
 
@@ -32,10 +32,10 @@ void encrypt::FileInput::read(char* data, std::streamsize size)
 {
 	if (this->fin.is_open()) {
 		if (!this->fin.read(data, size)) {
-			throw std::runtime_error("input file is ended");
-		};
+			throw std::runtime_error("input file is ended\n");
+		}
 	} else {
-		throw std::runtime_error("Failed to read file: file is not exist?");
+		throw std::runtime_error("Failed to read file: file is not exist?\n");
 	}
 }
 

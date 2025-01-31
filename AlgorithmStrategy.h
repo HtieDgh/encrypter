@@ -14,7 +14,7 @@
    limitations under the License.
 */
 #pragma once
-#include "Algoritm.h"
+#include "Algorithm.h"
 namespace encrypt {
 	class AlgorithmStrategy		
 	{
@@ -24,6 +24,7 @@ namespace encrypt {
 		AlgorithmStrategy()=default;
 		void setAlgorithm(Algorithm*);
 		void doAlgorithm();
+		void readme(OutputStrategy*);
 		~AlgorithmStrategy();
 	};
 }

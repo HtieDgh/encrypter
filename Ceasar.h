@@ -14,20 +14,21 @@
    limitations under the License.
 */
 #pragma once
-#include"Algoritm.h"
+#include"Algorithm.h"
+#include<map>
 namespace encrypt {
 	class Ceasar : public Algorithm
 	{
 	private:
-		bool _done;		//Статус шифрования
+		bool _done;			//Статус шифрования
 		bool _mode;		//true если требуется расшифровать
-		int _d, _kd;	//смещение данных и ключа
-		const char* _key;		//Указатель на ключ
-		char _dec;		//Промежуточный результат шифрования 1 байта
-		size_t _maxsize;//Макс размер в байтах после которого следует остановить шифрование
+		int _d, _kd;		//смещение данных и ключа, используются в run()
+		const char* _key;	//Указатель на ключ
+		char _dec;			//Промежуточный результат шифрования 1 байта
+		size_t _maxsize;	//Макс размер в байтах после которого следует остановить шифрование
 	public:
 		Ceasar();
-		Ceasar(char* _key, size_t maxsize);
+		Ceasar(char* modename, std::map<std::string, const char*>& const params,OutputStrategy* const errout);
 		~Ceasar();
 
 		const char* key() const;
@@ -36,7 +37,8 @@ namespace encrypt {
 		void maxsize(size_t maxsize);
 
 		void run() override;
-		bool mode() const override;
-		void mode(bool isEnc) override;
+		bool mode() const;
+		void mode(bool isEnc);
+		void readme() override;
 	};
 }

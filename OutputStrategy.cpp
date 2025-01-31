@@ -24,7 +24,7 @@ encrypt::FileOutput::FileOutput(const char* path, std::ios_base::open_mode openT
 {
 	this->fout.open(path, openType);
 	if (!this->fout.is_open()) {
-		throw std::runtime_error((const std::string)"Failed to open file: " + path);
+		throw std::runtime_error((const std::string)"Failed to open file: " + path+'\n');
 	}
 }
 
@@ -34,7 +34,7 @@ void encrypt::FileOutput::write(char* data, std::streamsize size)
 		this->fout.write(data, size);
 	}
 	else {
-		throw std::runtime_error("Failed to write file: file is not exist?");
+		throw std::runtime_error("Failed to write file: file is not exist?\n");
 	}
 }
 
@@ -43,4 +43,9 @@ encrypt::FileOutput::~FileOutput()
 	if (this->fout.is_open()) {
 		this->fout.close();
 	}
+}
+
+void encrypt::StderrOutput::write(char* data, std::streamsize size)
+{
+	std::cerr.write(data, size);
 }

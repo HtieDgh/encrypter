@@ -21,14 +21,16 @@ namespace encrypt {
 	{
 	protected:
 		OutputStrategy* _of = nullptr;
-		InputStrategy* _if=nullptr;
+		OutputStrategy* _ef = nullptr;
+		InputStrategy* _if = nullptr;
 	public:								   
-		virtual bool mode() const = 0;
-		virtual void mode(bool isEnc)=0;
 		virtual void run()=0;
+
+		virtual void readme() = 0;// Вывод примеров использования алгоритма
 
 		void setOutput(OutputStrategy*);
 		void setInput(InputStrategy*);
+		void setErrOutput(OutputStrategy*);
 		~Algorithm();
 	};
 }
