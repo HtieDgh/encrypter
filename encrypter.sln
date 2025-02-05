@@ -9,10 +9,6 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
-		decode|x64 = decode|x64
-		decode|x86 = decode|x86
-		encode|x64 = encode|x64
-		encode|x86 = encode|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -21,14 +17,6 @@ Global
 		{39F4E733-885A-4D99-9882-731FDB32A66B}.Debug|x64.Build.0 = Debug|x64
 		{39F4E733-885A-4D99-9882-731FDB32A66B}.Debug|x86.ActiveCfg = Debug|Win32
 		{39F4E733-885A-4D99-9882-731FDB32A66B}.Debug|x86.Build.0 = Debug|Win32
-		{39F4E733-885A-4D99-9882-731FDB32A66B}.decode|x64.ActiveCfg = decode|x64
-		{39F4E733-885A-4D99-9882-731FDB32A66B}.decode|x64.Build.0 = decode|x64
-		{39F4E733-885A-4D99-9882-731FDB32A66B}.decode|x86.ActiveCfg = decode|Win32
-		{39F4E733-885A-4D99-9882-731FDB32A66B}.decode|x86.Build.0 = decode|Win32
-		{39F4E733-885A-4D99-9882-731FDB32A66B}.encode|x64.ActiveCfg = encode|x64
-		{39F4E733-885A-4D99-9882-731FDB32A66B}.encode|x64.Build.0 = encode|x64
-		{39F4E733-885A-4D99-9882-731FDB32A66B}.encode|x86.ActiveCfg = encode|Win32
-		{39F4E733-885A-4D99-9882-731FDB32A66B}.encode|x86.Build.0 = encode|Win32
 		{39F4E733-885A-4D99-9882-731FDB32A66B}.Release|x64.ActiveCfg = Release|x64
 		{39F4E733-885A-4D99-9882-731FDB32A66B}.Release|x64.Build.0 = Release|x64
 		{39F4E733-885A-4D99-9882-731FDB32A66B}.Release|x86.ActiveCfg = Release|Win32

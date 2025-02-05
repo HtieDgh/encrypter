@@ -219,6 +219,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -228,25 +229,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Algorithm.cpp" />
-    <ClCompile Include="Ceasar.cpp" />
-    <ClCompile Include="InputStrategy.cpp" />
-    <ClCompile Include="OutputStrategy.cpp" />
-    <ClCompile Include="AlgorithmStrategy.cpp" />
-    <ClCompile Include="Source.cpp" />
-    <ClCompile Include="XTEA.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\encrypt\Algorithm.cpp" />
+    <ClCompile Include="src\encrypt\AlgorithmStrategy.cpp" />
+    <ClCompile Include="src\encrypt\Ceasar.cpp" />
+    <ClCompile Include="src\encrypt\InputStrategy.cpp" />
+    <ClCompile Include="src\encrypt\OutputStrategy.cpp" />
+    <ClCompile Include="src\encrypt\XTEA.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ceasar.h" />
-    <ClInclude Include="Algorithm.h" />
-    <ClInclude Include="InputStrategy.h" />
-    <ClInclude Include="OutputStrategy.h" />
-    <ClInclude Include="AlgorithmStrategy.h" />
-    <ClInclude Include="XTEA.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="src\encrypt\Algorithm.h" />
+    <ClInclude Include="src\encrypt\AlgorithmStrategy.h" />
+    <ClInclude Include="src\encrypt\Ceasar.h" />
+    <ClInclude Include="src\encrypt\InputStrategy.h" />
+    <ClInclude Include="src\encrypt\OutputStrategy.h" />
+    <ClInclude Include="src\encrypt\XTEA.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

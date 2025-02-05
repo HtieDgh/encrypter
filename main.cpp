@@ -19,9 +19,9 @@
 #include<locale.h>
 #include<Windows.h>
 #include<map>
-#include "Ceasar.h"
-#include "XTEA.h"
-#include "AlgorithmStrategy.h"
+#include "src\encrypt\Ceasar.h"
+#include "src\encrypt\XTEA.h"
+#include "src\encrypt\AlgorithmStrategy.h"
 
 using namespace std;
 using namespace encrypt;
@@ -52,23 +52,19 @@ int main(int argc, char* argv[], char* envp[]){
 		delete controller;
 		return 0;
 	} 
-	Algorithm* alg;
 
 	// ÏÎÄÃÎÒÎÂÊÀ Ê ÂÛÏÎËÍÅÍÈÞ: ÍÀÑÒÐÎÉÊÀ ÐÅÆÈÌÀ Â ÊÎÍÑÒÐÓÊÒÎÐÀÕ ÊËÀÑÑÎÂ-ÐÅÀËÈÇÀÖÈÉ ÀËÃÎÐÈÒÌÀÎÂ
 	if (!strcmp(argv[1], "ceasar"))			// ÀÃËÎÐÈÒÌ ÖÅÇÀÐß
 	{
 		
-		alg = new Ceasar(argv[2],params, errout);
-	
 		// Ïîäòâåðæäåíèå àëãîðèòìà
-		controller->setAlgorithm(alg);
+		controller->setAlgorithm(new Ceasar(argv[2], params, errout));
 
 	} else if (!strcmp(argv[1], "xtea"))	// XTEA
 	{
-		alg = new XTEA(argv[2], params, errout);
 
 		// Ïîäòâåðæäåíèå àëãîðèòìà
-		controller->setAlgorithm(alg);
+		controller->setAlgorithm(new XTEA(argv[2], params, errout));
 
 	}else{
 		controller->readme(errout);
