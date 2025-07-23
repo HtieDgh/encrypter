@@ -23,8 +23,8 @@ namespace encrypt {
 		OutputStrategy* _of = nullptr;
 		OutputStrategy* _ef = nullptr;
 		InputStrategy* _if = nullptr;
-	public:								   
-		virtual void run()=0;
+	public:
+		virtual void run() = 0;
 
 		virtual void readme() = 0;// Вывод примеров использования алгоритма
 

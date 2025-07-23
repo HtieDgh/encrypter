@@ -38,8 +38,9 @@ namespace encrypt {
 	private:
 		std::ofstream fout;
 	public:
+		
 		//path - путь до файла, openType - число, определенное в std::ios
-		FileOutput(const char* path, std::ios_base::open_mode openType = std::ios::binary);
+		FileOutput(const char* path, int openType = std::ios::binary);
 		void write(char* data, std::streamsize size = 1) override;
 		~FileOutput();
 	};

@@ -22,7 +22,7 @@ void encrypt::AlgorithmStrategy::setAlgorithm(Algorithm* alg)
 
 void encrypt::AlgorithmStrategy::doAlgorithm()
 {
-	_alg->run();
+		_alg->run();
 }
 encrypt::AlgorithmStrategy::~AlgorithmStrategy()
 {
@@ -30,7 +30,7 @@ encrypt::AlgorithmStrategy::~AlgorithmStrategy()
 };
 void encrypt::AlgorithmStrategy::readme(OutputStrategy* out)
 {
-	std::stringstream s;
+	std::stringstream s;//TR9
 	s << "Использование:\n"
 		<< "\n"
 		<< "encrypter {имя алгоритма} {команда} [опции] -if \\path\\to\\input.txt -of \\path\\to\\output.txt\n"

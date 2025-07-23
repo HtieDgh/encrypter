@@ -32,14 +32,15 @@ namespace encrypt {
         size_t _maxsize = -1;	    // Макс размер в байтах после которого следует остановить шифрование
         uint32_t _nr = 32;          // Количество раундов Фестеля
         const char _KEYFILEEXT[32] = ".key";
-        
+        bool _done;			        //Момент когда работу можно завершить. Используются в run()
+
         void _encode(uint32_t* v);
         void _decode(uint32_t* v);
 
         uint32_t* _gen();
     public:
         XTEA();
-        XTEA(char* modename, std::map<std::string, const char*>& const params, OutputStrategy* const errout);
+        XTEA(char* modename, std::map<std::string, const char*>& params, OutputStrategy* const errout);
         ~XTEA();
 
         void gen(OutputStrategy* okf);

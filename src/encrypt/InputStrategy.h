@@ -16,16 +16,20 @@
 #pragma once
 #include<iostream>
 #include<fstream>
+#include<filesystem>
+namespace fs = std::filesystem;
 namespace encrypt {
+
 	class InputStrategy
 	{
 	public:
 		virtual ~InputStrategy() = default;
-		virtual void read(char* data, std::streamsize size = 1) = 0;
+		// Возвращает количество прочитаных бит начиная с младшего индекса [data]
+		virtual long long read(char* data, std::streamsize size = 1) = 0;
 	};
 	class StdoutInput : public InputStrategy {
 	public:
-		void read(char* data, std::streamsize size = 1) override;
+		long long read(char* data, std::streamsize size = 1) override;
 	};
 
 	class FileInput : public InputStrategy {
@@ -33,8 +37,20 @@ namespace encrypt {
 		std::ifstream fin;
 	public:
 		//path - путь до файла, openType - число, определенное в std::ios
-		FileInput(const char* path, std::ios_base::open_mode openType = std::ios::binary);
-		void read(char* data, std::streamsize size = 1) override;
+		FileInput(const char* path, int openType = std::ios::binary);
+		long long read(char* data, std::streamsize size = 1) override;
 		~FileInput();
+	};
+
+	//
+	class DirectoryInput : public InputStrategy {
+	private:	
+		FileInput* fin;
+		
+		void _getFilepaths(fs::path& fs_dirpath);
+	public:
+		DirectoryInput(const char* dirPath, int openType = std::ios::binary);
+		long long read(char* data, std::streamsize size = 1) override;
+		~DirectoryInput();
 	};
 }

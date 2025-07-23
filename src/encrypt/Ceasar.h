@@ -20,15 +20,16 @@ namespace encrypt {
 	class Ceasar : public Algorithm
 	{
 	private:
-		bool _done;			//Статус шифрования
-		bool _mode;		//true если требуется расшифровать
-		int _d, _kd;		//смещение данных и ключа, используются в run()
-		const char* _key;	//Указатель на ключ
+		bool _mode;			//true если требуется расшифровать
+		int _kd;			//Смещение ключа, используются в run()
+		const char* _key;	//Указатель на ключ-строку
 		char _dec;			//Промежуточный результат шифрования 1 байта
-		size_t _maxsize;	//Макс размер в байтах после которого следует остановить шифрование
+		size_t _d,			//Счетчик итераций чтения с потока, используется в run()
+			_maxsize;		//Макс размер в байтах после которого следует остановить шифрование
+		bool _ready = false;//true если алгоритм инициализирован и готов к обработке. Используется в run() чтобы прервать выполнение если алг не настроен например в случае неверно переданного modename
 	public:
 		Ceasar();
-		Ceasar(char* modename, std::map<std::string, const char*>& const params,OutputStrategy* const errout);
+		Ceasar(char* modename, std::map<std::string, const char*>& params,OutputStrategy* const errout);
 		~Ceasar();
 
 		const char* key() const;

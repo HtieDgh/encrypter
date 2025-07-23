@@ -15,28 +15,25 @@
 */
 #include "InputStrategy.h"
 
-void encrypt::StdoutInput::read(char* data,std::streamsize size)
+long long encrypt::StdoutInput::read(char* data,std::streamsize size)
 {
-	std::cin.read(data,size);
+	return std::cin.read(data,size), std::cin.gcount();
 }
-
-encrypt::FileInput::FileInput(const char* path,std::ios_base::open_mode openType)
+//==============================================================
+encrypt::FileInput::FileInput(const char* path, int openType)
 {
 	this->fin.open(path, openType);
 	if (!this->fin.is_open()) {
-		throw std::runtime_error((const std::string)"Failed to open file: " + path+'\n');
+		throw std::runtime_error((const std::string)"Failed to open file: " + path + '\n');//TR6
 	}
 }
 
-void encrypt::FileInput::read(char* data, std::streamsize size)
+long long encrypt::FileInput::read(char* data, std::streamsize size)
 {
-	if (this->fin.is_open()) {
-		if (!this->fin.read(data, size)) {
-			throw std::runtime_error("input file is ended\n");
-		}
-	} else {
-		throw std::runtime_error("Failed to read file: file is not exist?\n");
+	if (!this->fin.is_open()) {
+		throw std::runtime_error("Failed to read file: is file existing?\n");//TR8
 	}
+	return this->fin.read(data, size), this->fin.gcount();
 }
 
 encrypt::FileInput::~FileInput()
@@ -44,4 +41,24 @@ encrypt::FileInput::~FileInput()
 	if (this->fin.is_open()) {
 		this->fin.close();
 	}
+}
+
+//==============================================================
+encrypt::DirectoryInput::~DirectoryInput()
+{
+	delete this->fin;
+}
+void encrypt::DirectoryInput::_getFilepaths(fs::path& fs_dirpath)
+{
+	//TODO
+}
+encrypt::DirectoryInput::DirectoryInput(const char* dirPath, int openType)
+{
+	//this->fin = new FileInput[10]{FileInput()}
+	//TODO
+	this->fin=new FileInput(dirPath, openType);
+}
+long long encrypt::DirectoryInput::read(char* data, std::streamsize size)
+{
+	return this->fin[0].read(data);//TODO
 }

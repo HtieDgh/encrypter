@@ -30,7 +30,7 @@ int main(int argc, char* argv[], char* envp[]){
 	setlocale(LC_ALL, ".1251");
 	SetConsoleCP(1251);
 	AlgorithmStrategy* controller=new AlgorithmStrategy();
-	StderrOutput* errout = new StderrOutput();
+	StderrOutput* errout = new StderrOutput();//TODO
 	map<string,const char*> params;
 	// нопедекемхе оюпюлерпнб х ху гмювемхи
 	for (int i = 3; i < argc; i++) {
