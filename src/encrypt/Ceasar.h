@@ -20,17 +20,22 @@ namespace encrypt {
 	class Ceasar : public Algorithm
 	{
 	private:
-		bool _mode;			//true если требуется расшифровать
 		int _kd;			//Смещение ключа, используются в run()
 		const char* _key;	//Указатель на ключ-строку
 		char _dec;			//Промежуточный результат шифрования 1 байта
 		size_t _d,			//Счетчик итераций чтения с потока, используется в run()
 			_maxsize;		//Макс размер в байтах после которого следует остановить шифрование
-		bool _ready = false;//true если алгоритм инициализирован и готов к обработке. Используется в run() чтобы прервать выполнение если алг не настроен например в случае неверно переданного modename
 	public:
+		enum class CeasarMode
+		{
+			ENC,
+			DEC,
+			NOMODE,
+			NOKEY,
+			README
+		};
 		Ceasar();
 		Ceasar(char* modename, std::map<std::string, const char*>& params,OutputStrategy* const errout);
-		~Ceasar();
 
 		const char* key() const;
 		size_t maxsize() const;
@@ -38,8 +43,29 @@ namespace encrypt {
 		void maxsize(size_t maxsize);
 
 		void run() override;
-		bool mode() const;
-		void mode(bool isEnc);
+		CeasarMode mode() const;
+		void mode(CeasarMode mode);
 		void readme() override;
+	private:
+		CeasarMode _mode;			//true если требуется расшифровать
+		
+	/*	class CesarBuilder {
+			private:
+				bool _mode;			
+				int _kd;			
+				const char* _key;	
+				char _dec;			
+				size_t _d,			
+					_maxsize;		
+				bool _ready = false;
+			public:
+				CesarBuilder();
+			
+				CesarBuilder& modename(char* modename);
+				CesarBuilder& key(const char* _key);
+				CesarBuilder& key(const char* _key);
+
+				Ceasar* build();
+		};*/
 	};
 }

@@ -8,5 +8,9 @@
 #define PCH_H
 
 // Добавьте сюда заголовочные файлы для предварительной компиляции
-
+#include<string>
+#include<map>
+#include<filesystem>
+#include "..\..\src\encrypt\Ceasar.h"
+#include "..\..\src\encrypt\XTEA.h"
 #endif //PCH_H

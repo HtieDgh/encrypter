@@ -21,13 +21,6 @@ namespace encrypt {
     class XTEA : public Algorithm
     {
     private:
-        enum class XTEAmode
-        {
-            ENC,
-            DEC,
-            GEN,
-            README
-        } _mode;                // Различные режимы работы алгоритма
         uint32_t* _key = nullptr;
         size_t _maxsize = -1;	    // Макс размер в байтах после которого следует остановить шифрование
         uint32_t _nr = 32;          // Количество раундов Фестеля
@@ -39,9 +32,22 @@ namespace encrypt {
 
         uint32_t* _gen();
     public:
+        enum class XTEAMode
+        {
+            ENC,
+            DEC,
+            GEN,
+            NOOUTPUTGEN,
+            NOMODE,
+            NOKFENC,
+            NOKFDEC,
+            NOACCESKF,
+            NOFULLKF,
+            README
+        };
         XTEA();
         XTEA(char* modename, std::map<std::string, const char*>& params, OutputStrategy* const errout);
-        ~XTEA();
+        ~XTEA() override;
 
         void gen(OutputStrategy* okf);
         
@@ -49,6 +55,11 @@ namespace encrypt {
 
         void run() override;
         void readme() override;
+        XTEAMode mode() const;
+        void mode(XTEAMode mode);
+        void setKey(uint32_t*& key);
+    private:
+        XTEAMode _mode;                // Различные режимы работы алгоритма
     };
 }
 

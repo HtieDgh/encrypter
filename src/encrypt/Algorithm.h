@@ -31,7 +31,7 @@ namespace encrypt {
 		void setOutput(OutputStrategy*);
 		void setInput(InputStrategy*);
 		void setErrOutput(OutputStrategy*);
-		~Algorithm();
+		virtual ~Algorithm();
 	};
 }
 

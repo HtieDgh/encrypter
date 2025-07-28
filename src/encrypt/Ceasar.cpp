@@ -17,46 +17,47 @@
 #include<iostream>
 #include<iomanip>
 #include<sstream>
-#include<bitset> // для двоичного представления числа
 using namespace std;
-//TR<номер> - индентификатор для Модуля локализации. //TODO
+//TR<номер> - идентификатор для Модуля локализации. //TODO
 
 encrypt::Ceasar::Ceasar()
 {
-	_mode = false;
+	_mode = encrypt::Ceasar::CeasarMode::README;
 	_d = 0, _kd = 0;
 	this->key(new char[8] {"default"});
 	_dec = 0;
 	this->maxsize(0);
 	this->setErrOutput(new StderrOutput());
-	this->_ready = true;
 }
 
-encrypt::Ceasar::Ceasar(char* modename, std::map<string, const char*>& params, OutputStrategy* const errout)
+encrypt::Ceasar::Ceasar(char* modename, map<string, const char*>& params, OutputStrategy* const errout)
 {
 	this->setErrOutput(errout);
-	try
-	{
+	try {
 		if (!strcmp(modename, "enc"))
 		{
-			this->mode(false);
-		} else if (!strcmp(modename, "dec"))
-		{
-			this->mode(true);
-		} else if (!strcmp(modename, "-?") || !strcmp(modename, "-help")) {
-			throw std::logic_error("Вывод справки по использованию:\n");
-		} else {
-			throw std::logic_error("Такого режима не существует");//TR2
+			this->mode(encrypt::Ceasar::CeasarMode::ENC);
 		}
-		this->mode(!strcmp(modename, "dec"));
+		else if (!strcmp(modename, "dec"))
+		{
+			this->mode(encrypt::Ceasar::CeasarMode::DEC);
+		} 
+		else if (!strcmp(modename, "-?") || !strcmp(modename, "-help")) 
+		{
+			throw encrypt::Ceasar::CeasarMode(encrypt::Ceasar::CeasarMode::README);
+		} 
+		else 
+		{
+			throw encrypt::Ceasar::CeasarMode(encrypt::Ceasar::CeasarMode::NOMODE);
+		}
 
 		if (params.count("-k") == 0)
 		{
-			throw std::logic_error("Параметр -k не задан");//TR3
+			throw encrypt::Ceasar::CeasarMode(encrypt::Ceasar::CeasarMode::NOKEY);
 		}
 
 		this->key(params["-k"]);
-		
+
 		if (params.count("-size") == 0)
 		{
 			this->maxsize(0);
@@ -83,18 +84,9 @@ encrypt::Ceasar::Ceasar(char* modename, std::map<string, const char*>& params, O
 			// Путь до файла назначен, ввод из файла
 			this->setInput(new FileInput(params["-if"]));
 		}
-		//ПОДТВЕРЖДЕНИЕ ОКОНЧАНИЯ ИНИЦИАЛИЗАЦИИ
-		this->_ready = true;
-	} catch (const std::exception& e)
-	{
-		this->_ef->write((char*)(e.what()), strlen(e.what()));
-		this->readme();
+	} catch (const encrypt::Ceasar::CeasarMode& err) {
+		this->mode(err);
 	}
-}
-
-encrypt::Ceasar::~Ceasar()
-{
-	delete[] _key;
 }
 
 const char* encrypt::Ceasar::key() const
@@ -119,50 +111,64 @@ void encrypt::Ceasar::maxsize(size_t maxsize)
 
 void encrypt::Ceasar::run()
 {
-	if (!this->_ready)
+	switch (_mode)
 	{
-		return;
-	}
-	try {
-		while (true)
+	case encrypt::Ceasar::CeasarMode::ENC:
+	case encrypt::Ceasar::CeasarMode::DEC:
+		try {
+			while (true)
+			{
+				// ВВОД
+				if (this->_if->read(&_dec) != 1) {
+					break;
+				}
+
+				// ОБРАБОТКА
+				_dec += ( _mode == encrypt::Ceasar::CeasarMode::DEC ? -1 : 1) * _key[_kd++];
+
+				if (_kd == strlen(_key)) {
+					_kd = 0;
+				}
+
+				// ВЫВОД
+				this->_of->write(&_dec);
+
+				// СМЕНА ИТЕРАЦИИ _maxsize - количество байт которые надо считать с потока ввода
+				// В случае если -size опция не была задана _maxsize=0 и это условие всегда ложно,
+				// выход из цикла по окончанию входного потока
+				if (++_d == _maxsize) {
+					break;
+				}
+			}
+		} catch (const std::exception& e)
 		{
-			// ВВОД
-			if (this->_if->read(&_dec) != 1) {
-				break;
-			}
-
-			// ОБРАБОТКА
-			_dec += ( _mode ? -1 : 1)*_key[_kd++];
-		
-			if (_kd == strlen(_key)) {
-				_kd = 0;
-			}
-
-			// ВЫВОД
-			this->_of->write(&_dec);
-
-			// СМЕНА ИТЕРАЦИИ _maxsize - количество байт которые надо считать с потока ввода
-			// В случае если -size опция не была задана _maxsize=0 и это условие всегда ложно,
-			// выход из цикла по окончанию входного потока
-			if (++_d == _maxsize) {
-				break;
-			}
+			cerr << e.what() << endl;
+			this->readme();
 		}
-	} catch (const std::exception& e)
-	{
-		cerr << e.what() << endl;
+		break;
+	case encrypt::Ceasar::CeasarMode::NOMODE:
+		this->_ef->write((char*)("Такого режима не существует\n"), 28);//TR1
 		this->readme();
+		break;
+	case encrypt::Ceasar::CeasarMode::README:
+		this->_ef->write((char*)("Вывод справки по использованию:\n"), 32);//TR2
+		this->readme();
+		break;
+	case encrypt::Ceasar::CeasarMode::NOKEY:
+		this->_ef->write((char*)("Параметр -k не задан\n"), 21);//TR3
+		this->readme();
+		break;
 	}
 }
 
-bool encrypt::Ceasar::mode() const
+encrypt::Ceasar::CeasarMode encrypt::Ceasar::mode() const
 {
 	return this->_mode;
 }
 
-void encrypt::Ceasar::mode(bool isEnc)
+void encrypt::Ceasar::mode(encrypt::Ceasar::CeasarMode mode)
 {
-	this->_mode = isEnc;
+	this->_mode = mode;
 }
 
 void encrypt::Ceasar::readme()
@@ -180,6 +186,6 @@ void encrypt::Ceasar::readme()
 		<< "\n"
 		<< "\tencrypter ceasar {dec|enc} -k \"key to decrypt\"\n"
 		<< "\n"
-		<< "Для корректной расшифровки опции -size и -k должны повторять значения при шифровании\n";
+		<< "Для корректной расшифровки опции -size (если использовалась) и -k должны повторять значения при шифровании\n";
 	this->_ef->write((char*)s.str().c_str(), s.str().size());
 }

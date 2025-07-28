@@ -24,7 +24,7 @@ namespace encrypt {
 	{
 	public:
 		virtual ~InputStrategy() = default;
-		// Возвращает количество прочитаных бит начиная с младшего индекса [data]
+		// Возвращает количество прочитанных бит начиная с младшего индекса [data]
 		virtual long long read(char* data, std::streamsize size = 1) = 0;
 	};
 	class StdoutInput : public InputStrategy {
@@ -42,7 +42,7 @@ namespace encrypt {
 		~FileInput();
 	};
 
-	//
+	//TODO
 	class DirectoryInput : public InputStrategy {
 	private:	
 		FileInput* fin;

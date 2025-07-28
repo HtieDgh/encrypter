@@ -33,13 +33,19 @@ void encrypt::AlgorithmStrategy::readme(OutputStrategy* out)
 	std::stringstream s;//TR9
 	s << "Использование:\n"
 		<< "\n"
-		<< "encrypter {имя алгоритма} {команда} [опции] -if \\path\\to\\input.txt -of \\path\\to\\output.txt\n"
+		<< "encrypter {\x1B[32mимя алгоритма\x1B[0m} {команда} [опции]\n"
 		<< "\n"
 		<< "Примечание:\n"
-		<< "\t{имя алгоритма} например ceasar\n"
+		<< "\t{\x1B[32mимя алгоритма\x1B[0m} например ceasar\n"
 		<< "\t{команда} и ее [опции] зависят от алгоритма, попробуйте изучить, например:\n"
 		<< "\n"
-		<< "\tencrypter ceasar -?";
+		<< "\tencrypter ceasar -?\n"
+		<< "\n"
+		<< "Доступны следующие алгоритмы {\x1B[32mимя алгоритма\x1B[0m}:\n"
+		<< "\n\x1B[1;32m"
+		<< "\tceasar\n"
+		<< "\txtea\n"
+		<< "\x1B[0m";
 	  
 	out->write((char*)s.str().c_str(), s.str().size());
 }

@@ -61,7 +61,7 @@ uint32_t* encrypt::XTEA::_gen()
 }
 encrypt::XTEA::XTEA()
 {
-	this->_mode = XTEAmode::README;
+	this->_mode = XTEAMode::README;
 }
 
 encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, OutputStrategy* const errout)
@@ -72,15 +72,15 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 		// ВЫБОР РЕЖИМА
 		if (!strcmp(modename, "enc"))
 		{
-			this->_mode = XTEAmode::ENC;
+			this->_mode = XTEAMode::ENC;
 		} else if (!strcmp(modename, "dec"))
 		{
-			this->_mode = XTEAmode::DEC;
+			this->_mode = XTEAMode::DEC;
 		} else if (!strcmp(modename, "gen"))
 		{
-			this->_mode = XTEAmode::GEN;
+			this->_mode = XTEAMode::GEN;
 			if (params.count("-of") == 0) {
-				throw std::logic_error("Команда gen требует обязательного использования опции -of\n");//TR10
+				throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOOUTPUTGEN);
 			}
 		} else if (
 			!strcmp(modename, "-?") ||
@@ -92,9 +92,9 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 				)
 			)
 		{
-			throw std::logic_error("Вывод справки по использованию:\n");//TR11
+			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::README);
 		} else {
-			throw std::logic_error("Такой команды не существует\n");//TR12
+			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOMODE);
 		}
 
 		// НАЗНАЧЕНИЕ ВЫВОДА
@@ -116,13 +116,8 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 			this->setInput(new FileInput(params["-if"]));
 		}
 		
-		if (_mode != XTEAmode::GEN) {
-			if (params.count("-size") == 0)
-			{
-				this->_maxsize=0;
-			} else {
-				this->_maxsize=atoi(params["-size"]);//atoi() переводит char* в int
-			}
+		if (_mode != XTEAMode::GEN && params.count("-size") != 0) {
+			this->_maxsize = atoi(params["-size"]);//atoi() переводит char* в int
 		}
 
 		if (params.count("-nr") != 0)
@@ -130,22 +125,22 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 			this->_nr = atoi(params["-nr"]);
 		}
 		// исключения при сочетании режимов и опций
-		if (_mode == XTEAmode::ENC && params.count("-kf") == 0 && params.count("-of") == 0)
+		if (_mode == XTEAMode::ENC && params.count("-kf") == 0 && params.count("-of") == 0)
 		{
-			throw std::logic_error("Невозможно использование команды enc без опции -kf и -of\n");//TR14// can't use enc without -kf and -of\n
+			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOKFENC);			
 		}
-		if (_mode == XTEAmode::DEC && params.count("-kf") == 0 && params.count("-if") == 0)
+		if (_mode == XTEAMode::DEC && params.count("-kf") == 0 && params.count("-if") == 0)
 		{
-			throw std::logic_error("Невозможно использование команды dec без опции -kf и -if");//TR15//can't use dec without -kf and -if\n
+			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOKFDEC);
 		}
 
 		// без разницы это dec enc gen - _key должен быть заполнен перед выполнением!
-		if (params.count("-kf") != 0 && _mode != XTEAmode::GEN)
+		if (params.count("-kf") != 0 && _mode != XTEAMode::GEN)
 		{
 			_key = reedKeyFile(params["-kf"]);
 		} else if (
 			params.count("-kf") == 0 &&
-			_mode == XTEAmode::ENC
+			_mode == XTEAMode::ENC
 			) {
 			// сгенерировать ключ-файл в той же директории что и результат шифрования (-of)
 			std::string s = params["-of"]; s += _KEYFILEEXT;
@@ -154,23 +149,21 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 			delete okf;
 		} else if (
 			params.count("-kf") == 0 &&
-			_mode == XTEAmode::DEC
+			_mode == XTEAMode::DEC
 			) {
 			// попытка прочитать файл в той же директории что и -if
 			std::string s = params["-if"]; s += _KEYFILEEXT;
 			_key = reedKeyFile(s.c_str());
 		}
-	} catch (const std::exception& e)
+	} catch (const encrypt::XTEA::XTEAMode& e)
 	{
-		this->_ef->write((char*)e.what(), strlen(e.what()));
-		_mode = XTEAmode::README;
-		this->readme();
+		this->mode(e);
 	}
 }
 
 encrypt::XTEA::~XTEA()
 {
-	delete[] _key;
+	delete[] this->_key;
 }
 
 void encrypt::XTEA::gen(OutputStrategy* okf)
@@ -191,26 +184,26 @@ uint32_t* encrypt::XTEA::reedKeyFile(const char* path)
 	std::ifstream fin(path, std::ios::binary);
 
 	if (!fin.is_open()) {
-		throw std::logic_error("Файл не найден или нет доступа к ключ-файлу\n");//TR16
+		throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOACCESKF);
 	}
 
-	fin.read(reinterpret_cast<char*>(out), sizeof(out));
+	fin.read(reinterpret_cast<char*>(out), 16);
 
-	if (fin.gcount() != sizeof(out)) {
-		throw std::logic_error("Считан не весь ключ-файл\n");//TR17
+	if (fin.gcount() != 16) {
+		throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOFULLKF);
 	}
 	return out;
 }
 
 void encrypt::XTEA::run()
 {
-	try
+	_done = false;
+	switch (_mode)
 	{
-		_done = false;
-		switch (_mode)
+	case encrypt::XTEA::XTEAMode::ENC:
+	case encrypt::XTEA::XTEAMode::DEC: {
+		try
 		{
-		case encrypt::XTEA::XTEAmode::ENC:
-		case encrypt::XTEA::XTEAmode::DEC: {
 			char r[8]{};//инициализация нулями необходима
 			uint32_t blocks[2]{};
 			for (size_t i = 0; !_done; i += 8) {
@@ -229,7 +222,7 @@ void encrypt::XTEA::run()
 				memcpy(blocks, r, 8);
 
 				//ОБРАБОТКА
-				if (_mode == XTEAmode::ENC) {
+				if (_mode == XTEAMode::ENC) {
 					_encode(blocks);
 				} else {
 					_decode(blocks);
@@ -241,30 +234,55 @@ void encrypt::XTEA::run()
 
 				this->_of->write( 
 					r, 
-					_mode == encrypt::XTEA::XTEAmode::DEC && _done ? _maxsize-i : 8
+					_mode == encrypt::XTEA::XTEAMode::DEC && _done ? _maxsize-i : 8
 				);
 			}
+		} catch (const std::exception& e)
+		{
+			this->_ef->write((char*)e.what(), strlen(e.what()));
+			_mode = XTEAMode::README;
+			this->readme();
 		}
-			break;
-		case encrypt::XTEA::XTEAmode::GEN:
-			this->gen(this->_of);
-			break;
-		default:
-			break;
-		}
-	} catch (const std::exception& e)
-	{
-		this->_ef->write((char*)e.what(), strlen(e.what()));
-		_mode = XTEAmode::README;
-		this->readme();
 	}
+		break;
+	case encrypt::XTEA::XTEAMode::GEN:
+		this->gen(this->_of);
+		break;
+	case encrypt::XTEA::XTEAMode::NOOUTPUTGEN:
+		this->_ef->write((char*)("Команда gen требует обязательного использования опции -of\n"), 58);//TR10
+		this->readme();
+		break;
+	case encrypt::XTEA::XTEAMode::README:
+		this->_ef->write((char*)("Вывод справки по использованию:\n"),32);//TR11
+		this->readme();
+		break;
+	case encrypt::XTEA::XTEAMode::NOMODE:
+		this->_ef->write((char*)("Такой команды не существует\n"),28);//TR12
+		this->readme();
+		break;
+	case encrypt::XTEA::XTEAMode::NOKFENC:
+		this->_ef->write((char*)("Невозможно использование команды enc без опции -kf и -of\n"),57);//TR14// can't use enc without -kf and -of\n
+		this->readme();
+		break;
+	case encrypt::XTEA::XTEAMode::NOKFDEC:
+		this->_ef->write((char*)("Невозможно использование команды dec без опции -kf и -if\n"),57);//TR15//can't use dec without -kf and -if\n
+		this->readme();
+		break;
+	case encrypt::XTEA::XTEAMode::NOACCESKF:
+		this->_ef->write((char*)("Файл-ключ не найден или к нему нет доступа\n"),43);//TR16
+		break;
+	case encrypt::XTEA::XTEAMode::NOFULLKF:
+		this->_ef->write((char*)("Считан не весь ключ-файл\n"),25);//TR17
+		break;
+	}
+
 }
 
 void encrypt::XTEA::readme()
 {//TR18
 	const std::string s =
 		"Использование:\n"
-		"encrypter xtea {режим} [опции]: \n"
+		" encrypter xtea {режим} [опции]\n"
 		"\n"
 		"Режимы:\n"
 		" gen    Сгенерировать ключ-файл для последующего шифрования.\n" 
@@ -284,14 +302,31 @@ void encrypt::XTEA::readme()
 		" -nr 32                     Определить иное количество раундов петли \n"
 		"                            Фестеля. По умолчанию количество равно 32\n"
 		" -size 2048                 Ограничивает количество байтов необходимых\n"
-		"                            шифрования / дешифрования. Не должен превышать\n"
-		"                            размер входного файла, иначе - неопределённое \n"
-		"                            поведение. Обязательная опция в режимах \n"
-		"                            enc / dec\n"
+		"                            шифрования / дешифрования. Если превысит размер\n" 
+		"                            исходного файла, размер выходного файла будет не\n"
+		"                            превышать исходный более чем на 1 блок\n"
 		"Примеры:\n"
 		" encrypter xtea gen -of \"/path/to/encoded.txt\"\n"
 		" encrypter xtea enc -size 2048 -kf \"/path/to/file.key\" -if \"/path/to/plain.txt\" -of \"/path/to/encoded.txt\"\n"
-		" encrypter xtea dec -size 2048 -kf \"/path/to/file.key\" -if \"/path/to/encoded.txt\" -of \"/path/to/decoded.txt\"\n"
+		" encrypter xtea dec -kf \"/path/to/file.key\" -if \"/path/to/encoded.txt\" -of \"/path/to/decoded.txt\"\n"
 		"Для дополнительной информации, посетите https://github.com/HtieDgh/encrypter\n";
 	this->_ef->write((char*)s.c_str(), s.size());
+}
+
+encrypt::XTEA::XTEAMode encrypt::XTEA::mode() const
+{
+	return _mode;
+}
+
+void encrypt::XTEA::mode(XTEAMode mode)
+{
+	this->_mode = mode;
+}
+
+void encrypt::XTEA::setKey(uint32_t*& key)
+{
+	if (_key) {
+		delete this->_key;
+	}
+	_key = key;
 }
