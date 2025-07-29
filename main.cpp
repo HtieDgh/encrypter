@@ -32,20 +32,20 @@ int main(int argc, char* argv[], char* envp[]){
 	AlgorithmStrategy* controller=new AlgorithmStrategy();
 	StderrOutput* errout = new StderrOutput();//TODO
 	map<string,const char*> params;
-	// Œœ–≈ƒ≈À≈Õ»≈ œ¿–¿Ã≈“–Œ¬ » »’ «Õ¿◊≈Õ»…
+	// –û–ü–†–ï–î–ï–õ–ï–ù–ò–ï –ü–ê–†–ê–ú–ï–¢–†–û–í –ò –ò–• –ó–ù–ê–ß–ï–ù–ò–ô
 	for (int i = 3; i < argc; i++) {
 		if (argv[i][0] == '-' && i + 1 < argc && argv[i + 1][0] != '-')
 		{
-		// Ô‡‡ÏÂÚ ÒÓ ÁÌ‡˜ÂÌËÂÏ
+		// –ø–∞—Ä–∞–º–µ—Ç—Ä —Å–æ –∑–Ω–∞—á–µ–Ω–∏–µ–º
 			params[argv[i]] = argv[i + 1];
 		}
 		else if (argv[i][0] == '-')
 		{
-		// Ô‡‡ÏÂÚ ·ÂÁ ÁÌ‡˜ÂÌËˇ, Ì‡ÔËÏÂ ÙÎ‡„
+		// –ø–∞—Ä–∞–º–µ—Ç—Ä –±–µ–∑ –∑–Ω–∞—á–µ–Ω–∏—è, –Ω–∞–ø—Ä–∏–º–µ—Ä —Ñ–ª–∞–≥
 			params[argv[i]] = "";
 		}
 	}
-	// ¬€¬Œƒ —œ–¿¬ » œ–» Õ≈ƒŒ—“¿“ ≈ ¿–√”Ã≈Õ“Œ¬
+	// –í–´–í–û–î –°–ü–†–ê–í–ö–ò –ü–†–ò –ù–ï–î–û–°–¢–ê–¢–ö–ï –ê–†–ì–£–ú–ï–ù–¢–û–í
 	if (argc <= 2)
 	{
 		controller->readme(errout);
@@ -53,23 +53,23 @@ int main(int argc, char* argv[], char* envp[]){
 		return 0;
 	} 
 
-	// œŒƒ√Œ“Œ¬ ¿   ¬€œŒÀÕ≈Õ»ﬁ: Õ¿—“–Œ… ¿ –≈∆»Ã¿ ¬  ŒÕ—“–” “Œ–¿’  À¿——Œ¬-–≈¿À»«¿÷»… ¿À√Œ–»“Ã¿Œ¬
-	if (!strcmp(argv[1], "ceasar"))			// ¿√ÀŒ–»“Ã ÷≈«¿–ﬂ
+	// –ü–û–î–ì–û–¢–û–í–ö–ê –ö –í–´–ü–û–õ–ù–ï–ù–ò–Æ: –ù–ê–°–¢–†–û–ô–ö–ê –†–ï–ñ–ò–ú–ê –í –ö–û–ù–°–¢–†–£–ö–¢–û–†–ê–• –ö–õ–ê–°–°–û–í-–†–ï–ê–õ–ò–ó–ê–¶–ò–ô –ê–õ–ì–û–†–ò–¢–ú–ê–û–í
+	if (!strcmp(argv[1], "ceasar"))			// –ê–ì–õ–û–†–ò–¢–ú –¶–ï–ó–ê–†–Ø
 	{
 		
-		// œÓ‰Ú‚ÂÊ‰ÂÌËÂ ‡Î„ÓËÚÏ‡
+		// –ü–æ–¥—Ç–≤–µ—Ä–∂–¥–µ–Ω–∏–µ –∞–ª–≥–æ—Ä–∏—Ç–º–∞
 		controller->setAlgorithm(new Ceasar(argv[2], params, errout));
 
 	} else if (!strcmp(argv[1], "xtea"))	// XTEA
 	{
 
-		// œÓ‰Ú‚ÂÊ‰ÂÌËÂ ‡Î„ÓËÚÏ‡
+		// –ü–æ–¥—Ç–≤–µ—Ä–∂–¥–µ–Ω–∏–µ –∞–ª–≥–æ—Ä–∏—Ç–º–∞
 		controller->setAlgorithm(new XTEA(argv[2], params, errout));
 
 	}else{
 		controller->readme(errout);
 	}
-	// ¬€œŒÀÕ≈Õ»≈ ¿À√Œ–»“Ã¿
+	// –í–´–ü–û–õ–ù–ï–ù–ò–ï –ê–õ–ì–û–†–ò–¢–ú–ê
 	controller->doAlgorithm();
 	delete controller;
 	return 0;

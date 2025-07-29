@@ -6,7 +6,7 @@ namespace fs = std::filesystem;
 
 namespace UnitTest
 {
-	//Базовый абстрактный класс для 
+	//Р‘Р°Р·РѕРІС‹Р№ Р°Р±СЃС‚СЂР°РєС‚РЅС‹Р№ РєР»Р°СЃСЃ РґР»СЏ 
 	class MockInputStrategy : public encrypt::InputStrategy {
 	public:
 		MockInputStrategy(const char* plain, size_t maxpos):
@@ -35,7 +35,7 @@ namespace UnitTest
 		size_t _pos, _maxpos;
 	};
 
-	//Псевдо input для Ceasar algorithm
+	//РџСЃРµРІРґРѕ input РґР»СЏ Ceasar algorithm
 	class MockCeasarInputStrategy : public MockInputStrategy
 	{
 	public:
@@ -48,13 +48,13 @@ namespace UnitTest
 				if (kd == strlen(key)) {
 					kd = 0;
 				}
-				this->_encoded += _plain[i] + key[kd];//Верная зашифровка
-				this->_decoded += _plain[i] - key[kd];//Верная расшифровка
+				this->_encoded += _plain[i] + key[kd];//Р’РµСЂРЅР°СЏ Р·Р°С€РёС„СЂРѕРІРєР°
+				this->_decoded += _plain[i] - key[kd];//Р’РµСЂРЅР°СЏ СЂР°СЃС€РёС„СЂРѕРІРєР°
 				++kd;
 			}
 		};
 	};
-	//Псевдо input для XTEA 
+	//РџСЃРµРІРґРѕ input РґР»СЏ XTEA 
 	class MockXTEAInputStrategy : public MockInputStrategy
 	{
 	public:
@@ -107,7 +107,7 @@ namespace UnitTest
 			a.setOutput(MOS);
 			a.run();
 
-			Assert::AreEqual<std::string>(MIS->getTrueEncoded(), MOS->res.str(), L"Трансформация plain->enc не верна");
+			Assert::AreEqual<std::string>(MIS->getTrueEncoded(), MOS->res.str(), L"РўСЂР°РЅСЃС„РѕСЂРјР°С†РёСЏ plain->enc РЅРµ РІРµСЂРЅР°");
 		}
 
 		TEST_METHOD(DecodeTest) {
@@ -124,7 +124,7 @@ namespace UnitTest
 			a.setOutput(MOS);
 			a.run();
 
-			Assert::AreEqual<std::string>(MIS->getTrueDecoded(), MOS->res.str(), L"Ceasar Трансформация plain->enc не верна");
+			Assert::AreEqual<std::string>(MIS->getTrueDecoded(), MOS->res.str(), L"Ceasar РўСЂР°РЅСЃС„РѕСЂРјР°С†РёСЏ plain->enc РЅРµ РІРµСЂРЅР°");
 		}
 	};
 	TEST_CLASS(XTEATest)
@@ -137,6 +137,7 @@ namespace UnitTest
 			Assert::AreEqual<uint8_t>(stubmode, (uint8_t)a.mode());
 		}
 		TEST_METHOD(EncodeTest) {
+			//Р Р°СѓРЅРґС‹ Р¤РµСЃС‚РµР»СЏ 32
 			auto key = new uint32_t[4]{
 				0x1f55d069,
 				0x32a45e6a,
@@ -144,7 +145,7 @@ namespace UnitTest
 				0xdf69d2f7
 			};
 
-			// "Привет мир!" CP1251
+			// "РџСЂРёРІРµС‚ РјРёСЂ!" CP1251
 			char plain[11] =
 			{
 				0xcf, 0xf0, 0xe8, 0xe2, 0xe5, 0xf2, 0x20, 0xec,
@@ -175,7 +176,7 @@ namespace UnitTest
 			a.mode(encrypt::XTEA::XTEAMode::ENC);
 			a.run();
 			std::string s = MOS->res.str();
-			Assert::AreEqual<std::string>(MIS->getTrueEncoded(), MOS->res.str(), L"XTEA Трансформация plain->enc не верна");
+			Assert::AreEqual<std::string>(MIS->getTrueEncoded(), MOS->res.str(), L"XTEA РўСЂР°РЅСЃС„РѕСЂРјР°С†РёСЏ plain->enc РЅРµ РІРµСЂРЅР°");
 		}
 	};
 }

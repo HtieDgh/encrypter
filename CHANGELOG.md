@@ -1,3 +1,9 @@
+## [Unreleased]
+
+### Changed
+- Кодировка исходных файлов изменена на utf-8: добавлены флаги компиляции `/source-charset:utf-8 /execution-charset:.CP1251`.
+
+
 ## [v0.2.2]
 
 ### Added

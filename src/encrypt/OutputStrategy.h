@@ -17,7 +17,7 @@
 #include<iostream>
 #include<fstream>
 namespace encrypt {
-	//Стратегия для разных выводов
+	//РЎС‚СЂР°С‚РµРіРёСЏ РґР»СЏ СЂР°Р·РЅС‹С… РІС‹РІРѕРґРѕРІ
 	class OutputStrategy {
 	public:
 		virtual ~OutputStrategy() = default;
@@ -39,7 +39,7 @@ namespace encrypt {
 		std::ofstream fout;
 	public:
 		
-		//path - путь до файла, openType - число, определенное в std::ios
+		//path - РїСѓС‚СЊ РґРѕ С„Р°Р№Р»Р°, openType - С‡РёСЃР»Рѕ, РѕРїСЂРµРґРµР»РµРЅРЅРѕРµ РІ std::ios
 		FileOutput(const char* path, int openType = std::ios::binary);
 		void write(char* data, std::streamsize size = 1) override;
 		~FileOutput();

@@ -24,7 +24,7 @@ namespace encrypt {
 	{
 	public:
 		virtual ~InputStrategy() = default;
-		// Возвращает количество прочитанных бит начиная с младшего индекса [data]
+		// Р’РѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРѕС‡РёС‚Р°РЅРЅС‹С… Р±РёС‚ РЅР°С‡РёРЅР°СЏ СЃ РјР»Р°РґС€РµРіРѕ РёРЅРґРµРєСЃР° [data]
 		virtual long long read(char* data, std::streamsize size = 1) = 0;
 	};
 	class StdoutInput : public InputStrategy {
@@ -36,7 +36,7 @@ namespace encrypt {
 	private:
 		std::ifstream fin;
 	public:
-		//path - путь до файла, openType - число, определенное в std::ios
+		//path - РїСѓС‚СЊ РґРѕ С„Р°Р№Р»Р°, openType - С‡РёСЃР»Рѕ, РѕРїСЂРµРґРµР»РµРЅРЅРѕРµ РІ std::ios
 		FileInput(const char* path, int openType = std::ios::binary);
 		long long read(char* data, std::streamsize size = 1) override;
 		~FileInput();

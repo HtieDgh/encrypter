@@ -69,7 +69,7 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 	this->setErrOutput(errout);
 	try
 	{
-		// ВЫБОР РЕЖИМА
+		// Р’Р«Р‘РћР  Р Р•Р–РРњРђ
 		if (!strcmp(modename, "enc"))
 		{
 			this->_mode = XTEAMode::ENC;
@@ -97,34 +97,34 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOMODE);
 		}
 
-		// НАЗНАЧЕНИЕ ВЫВОДА
+		// РќРђР—РќРђР§Р•РќРР• Р’Р«Р’РћР”Рђ
 		if (params.count("-of") == 0)
 		{
-			// По умолчанию вывод в stdout
+			// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІС‹РІРѕРґ РІ stdout
 			this->setOutput(new StdoutOutput());
 		} else {
-			// Путь до файла назначен, вывод в этот файл
+			// РџСѓС‚СЊ РґРѕ С„Р°Р№Р»Р° РЅР°Р·РЅР°С‡РµРЅ, РІС‹РІРѕРґ РІ СЌС‚РѕС‚ С„Р°Р№Р»
 			this->setOutput(new FileOutput(params["-of"]));
 		}
 
-		// НАЗНАЧЕНИЕ ВВОДА
+		// РќРђР—РќРђР§Р•РќРР• Р’Р’РћР”Рђ
 		if (params.count("-if") == 0)
 		{
-			// По умолчанию ввод из stdin иначе ввод из файла
+			// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІРІРѕРґ РёР· stdin РёРЅР°С‡Рµ РІРІРѕРґ РёР· С„Р°Р№Р»Р°
 			this->setInput(new StdoutInput());
 		} else {
 			this->setInput(new FileInput(params["-if"]));
 		}
 		
 		if (_mode != XTEAMode::GEN && params.count("-size") != 0) {
-			this->_maxsize = atoi(params["-size"]);//atoi() переводит char* в int
+			this->_maxsize = atoi(params["-size"]);//atoi() РїРµСЂРµРІРѕРґРёС‚ char* РІ int
 		}
 
 		if (params.count("-nr") != 0)
 		{
 			this->_nr = atoi(params["-nr"]);
 		}
-		// исключения при сочетании режимов и опций
+		// РёСЃРєР»СЋС‡РµРЅРёСЏ РїСЂРё СЃРѕС‡РµС‚Р°РЅРёРё СЂРµР¶РёРјРѕРІ Рё РѕРїС†РёР№
 		if (_mode == XTEAMode::ENC && params.count("-kf") == 0 && params.count("-of") == 0)
 		{
 			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOKFENC);			
@@ -134,7 +134,7 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOKFDEC);
 		}
 
-		// без разницы это dec enc gen - _key должен быть заполнен перед выполнением!
+		// Р±РµР· СЂР°Р·РЅРёС†С‹ СЌС‚Рѕ dec enc gen - _key РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅ РїРµСЂРµРґ РІС‹РїРѕР»РЅРµРЅРёРµРј!
 		if (params.count("-kf") != 0 && _mode != XTEAMode::GEN)
 		{
 			_key = reedKeyFile(params["-kf"]);
@@ -142,7 +142,7 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 			params.count("-kf") == 0 &&
 			_mode == XTEAMode::ENC
 			) {
-			// сгенерировать ключ-файл в той же директории что и результат шифрования (-of)
+			// СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РєР»СЋС‡-С„Р°Р№Р» РІ С‚РѕР№ Р¶Рµ РґРёСЂРµРєС‚РѕСЂРёРё С‡С‚Рѕ Рё СЂРµР·СѓР»СЊС‚Р°С‚ С€РёС„СЂРѕРІР°РЅРёСЏ (-of)
 			std::string s = params["-of"]; s += _KEYFILEEXT;
 			FileOutput* okf = new FileOutput(s.c_str());
 			this->gen(okf);
@@ -151,7 +151,7 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 			params.count("-kf") == 0 &&
 			_mode == XTEAMode::DEC
 			) {
-			// попытка прочитать файл в той же директории что и -if
+			// РїРѕРїС‹С‚РєР° РїСЂРѕС‡РёС‚Р°С‚СЊ С„Р°Р№Р» РІ С‚РѕР№ Р¶Рµ РґРёСЂРµРєС‚РѕСЂРёРё С‡С‚Рѕ Рё -if
 			std::string s = params["-if"]; s += _KEYFILEEXT;
 			_key = reedKeyFile(s.c_str());
 		}
@@ -204,24 +204,24 @@ void encrypt::XTEA::run()
 	case encrypt::XTEA::XTEAMode::DEC: {
 		try
 		{
-			char r[8]{};//инициализация нулями необходима
+			char r[8]{};//РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅСѓР»СЏРјРё РЅРµРѕР±С…РѕРґРёРјР°
 			uint32_t blocks[2]{};
 			for (size_t i = 0; !_done; i += 8) {
-				//ВВОД
+				//Р’Р’РћР”
 				if( 
 					this->_if->read(r,8) != 8 ||
 					_maxsize > 0 && i + 8 >= _maxsize
 				) {
-					//если прочитано меньше 8 байт, то файл закончился, команду можно завершать
+					//РµСЃР»Рё РїСЂРѕС‡РёС‚Р°РЅРѕ РјРµРЅСЊС€Рµ 8 Р±Р°Р№С‚, С‚Рѕ С„Р°Р№Р» Р·Р°РєРѕРЅС‡РёР»СЃСЏ, РєРѕРјР°РЅРґСѓ РјРѕР¶РЅРѕ Р·Р°РІРµСЂС€Р°С‚СЊ
 					_done = true;
 				}
 
-				// WARNING данные считываются в обратном порядке, 
-				// не знаю насколько это классический алгоритм xtea но последовательность
-				// plain > enc > dec > plain выполняется
+				// WARNING РґР°РЅРЅС‹Рµ СЃС‡РёС‚С‹РІР°СЋС‚СЃСЏ РІ РѕР±СЂР°С‚РЅРѕРј РїРѕСЂСЏРґРєРµ, 
+				// РЅРµ Р·РЅР°СЋ РЅР°СЃРєРѕР»СЊРєРѕ СЌС‚Рѕ РєР»Р°СЃСЃРёС‡РµСЃРєРёР№ Р°Р»РіРѕСЂРёС‚Рј xtea РЅРѕ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ
+				// plain > enc > dec > plain РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ
 				memcpy(blocks, r, 8);
 
-				//ОБРАБОТКА
+				//РћР‘Р РђР‘РћРўРљРђ
 				if (_mode == XTEAMode::ENC) {
 					_encode(blocks);
 				} else {
@@ -230,7 +230,7 @@ void encrypt::XTEA::run()
 
 				memcpy(r, blocks, 8);
 
-				//ВЫВОД
+				//Р’Р«Р’РћР”
 
 				this->_of->write( 
 					r, 
@@ -249,30 +249,30 @@ void encrypt::XTEA::run()
 		this->gen(this->_of);
 		break;
 	case encrypt::XTEA::XTEAMode::NOOUTPUTGEN:
-		this->_ef->write((char*)("Команда gen требует обязательного использования опции -of\n"), 58);//TR10
+		this->_ef->write((char*)("РљРѕРјР°РЅРґР° gen С‚СЂРµР±СѓРµС‚ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕРіРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РѕРїС†РёРё -of\n"), 58);//TR10
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::README:
-		this->_ef->write((char*)("Вывод справки по использованию:\n"),32);//TR11
+		this->_ef->write((char*)("Р’С‹РІРѕРґ СЃРїСЂР°РІРєРё РїРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЋ:\n"),32);//TR11
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOMODE:
-		this->_ef->write((char*)("Такой команды не существует\n"),28);//TR12
+		this->_ef->write((char*)("РўР°РєРѕР№ РєРѕРјР°РЅРґС‹ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚\n"),28);//TR12
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOKFENC:
-		this->_ef->write((char*)("Невозможно использование команды enc без опции -kf и -of\n"),57);//TR14// can't use enc without -kf and -of\n
+		this->_ef->write((char*)("РќРµРІРѕР·РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РєРѕРјР°РЅРґС‹ enc Р±РµР· РѕРїС†РёРё -kf Рё -of\n"),57);//TR14// can't use enc without -kf and -of\n
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOKFDEC:
-		this->_ef->write((char*)("Невозможно использование команды dec без опции -kf и -if\n"),57);//TR15//can't use dec without -kf and -if\n
+		this->_ef->write((char*)("РќРµРІРѕР·РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РєРѕРјР°РЅРґС‹ dec Р±РµР· РѕРїС†РёРё -kf Рё -if\n"),57);//TR15//can't use dec without -kf and -if\n
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOACCESKF:
-		this->_ef->write((char*)("Файл-ключ не найден или к нему нет доступа\n"),43);//TR16
+		this->_ef->write((char*)("Р¤Р°Р№Р»-РєР»СЋС‡ РЅРµ РЅР°Р№РґРµРЅ РёР»Рё Рє РЅРµРјСѓ РЅРµС‚ РґРѕСЃС‚СѓРїР°\n"),43);//TR16
 		break;
 	case encrypt::XTEA::XTEAMode::NOFULLKF:
-		this->_ef->write((char*)("Считан не весь ключ-файл\n"),25);//TR17
+		this->_ef->write((char*)("РЎС‡РёС‚Р°РЅ РЅРµ РІРµСЃСЊ РєР»СЋС‡-С„Р°Р№Р»\n"),25);//TR17
 		break;
 	}
 
@@ -281,35 +281,35 @@ void encrypt::XTEA::run()
 void encrypt::XTEA::readme()
 {//TR18
 	const std::string s =
-		"Использование:\n"
-		" encrypter xtea {режим} [опции]\n"
+		"РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ:\n"
+		" encrypter xtea {СЂРµР¶РёРј} [РѕРїС†РёРё]\n"
 		"\n"
-		"Режимы:\n"
-		" gen    Сгенерировать ключ-файл для последующего шифрования.\n" 
-		"        Опция - of обязательна\n"
-		" enc    Зашифровать файл. Если опция -kf не указана, то будет\n"
-		"        сгенерирован ключ-файл в той же директории что и -of.\n"
-		"        Использование без опций -kf и -of одновременно недопустимо\n"
-		" dec    Расшифровать файл. Если опция -kf не указана, то будет\n"
-		"        попытка поиска ключ файла в той же директории что и\n"
-		"        -if, с тем же именем, но с расширением .key. Использование\n"
-		"        без опции -kf и -if недопустимо\n"
-		"Опции:\n"
-		" -if \"/path/to/plain.txt\"   Ввод данных из файла\n"
-		" -of \"/path/to/encoded.txt\" Вывод данных в файл\n"
-		" -kf \"/path/to/file.key\"    Использование ключ-файла по заданному\n"
-		"                            пути\n"
-		" -nr 32                     Определить иное количество раундов петли \n"
-		"                            Фестеля. По умолчанию количество равно 32\n"
-		" -size 2048                 Ограничивает количество байтов необходимых\n"
-		"                            шифрования / дешифрования. Если превысит размер\n" 
-		"                            исходного файла, размер выходного файла будет не\n"
-		"                            превышать исходный более чем на 1 блок\n"
-		"Примеры:\n"
+		"Р РµР¶РёРјС‹:\n"
+		" gen    РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РєР»СЋС‡-С„Р°Р№Р» РґР»СЏ РїРѕСЃР»РµРґСѓСЋС‰РµРіРѕ С€РёС„СЂРѕРІР°РЅРёСЏ.\n" 
+		"        РћРїС†РёСЏ - of РѕР±СЏР·Р°С‚РµР»СЊРЅР°\n"
+		" enc    Р—Р°С€РёС„СЂРѕРІР°С‚СЊ С„Р°Р№Р». Р•СЃР»Рё РѕРїС†РёСЏ -kf РЅРµ СѓРєР°Р·Р°РЅР°, С‚Рѕ Р±СѓРґРµС‚\n"
+		"        СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅ РєР»СЋС‡-С„Р°Р№Р» РІ С‚РѕР№ Р¶Рµ РґРёСЂРµРєС‚РѕСЂРёРё С‡С‚Рѕ Рё -of.\n"
+		"        РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ Р±РµР· РѕРїС†РёР№ -kf Рё -of РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ РЅРµРґРѕРїСѓСЃС‚РёРјРѕ\n"
+		" dec    Р Р°СЃС€РёС„СЂРѕРІР°С‚СЊ С„Р°Р№Р». Р•СЃР»Рё РѕРїС†РёСЏ -kf РЅРµ СѓРєР°Р·Р°РЅР°, С‚Рѕ Р±СѓРґРµС‚\n"
+		"        РїРѕРїС‹С‚РєР° РїРѕРёСЃРєР° РєР»СЋС‡ С„Р°Р№Р»Р° РІ С‚РѕР№ Р¶Рµ РґРёСЂРµРєС‚РѕСЂРёРё С‡С‚Рѕ Рё\n"
+		"        -if, СЃ С‚РµРј Р¶Рµ РёРјРµРЅРµРј, РЅРѕ СЃ СЂР°СЃС€РёСЂРµРЅРёРµРј .key. РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ\n"
+		"        Р±РµР· РѕРїС†РёРё -kf Рё -if РЅРµРґРѕРїСѓСЃС‚РёРјРѕ\n"
+		"РћРїС†РёРё:\n"
+		" -if \"/path/to/plain.txt\"   Р’РІРѕРґ РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р°\n"
+		" -of \"/path/to/encoded.txt\" Р’С‹РІРѕРґ РґР°РЅРЅС‹С… РІ С„Р°Р№Р»\n"
+		" -kf \"/path/to/file.key\"    РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РєР»СЋС‡-С„Р°Р№Р»Р° РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ\n"
+		"                            РїСѓС‚Рё\n"
+		" -nr 32                     РћРїСЂРµРґРµР»РёС‚СЊ РёРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЂР°СѓРЅРґРѕРІ РїРµС‚Р»Рё \n"
+		"                            Р¤РµСЃС‚РµР»СЏ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РєРѕР»РёС‡РµСЃС‚РІРѕ СЂР°РІРЅРѕ 32\n"
+		" -size 2048                 РћРіСЂР°РЅРёС‡РёРІР°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°Р№С‚РѕРІ РЅРµРѕР±С…РѕРґРёРјС‹С…\n"
+		"                            С€РёС„СЂРѕРІР°РЅРёСЏ / РґРµС€РёС„СЂРѕРІР°РЅРёСЏ. Р•СЃР»Рё РїСЂРµРІС‹СЃРёС‚ СЂР°Р·РјРµСЂ\n" 
+		"                            РёСЃС…РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р°, СЂР°Р·РјРµСЂ РІС‹С…РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р° Р±СѓРґРµС‚ РЅРµ\n"
+		"                            РїСЂРµРІС‹С€Р°С‚СЊ РёСЃС…РѕРґРЅС‹Р№ Р±РѕР»РµРµ С‡РµРј РЅР° 1 Р±Р»РѕРє\n"
+		"РџСЂРёРјРµСЂС‹:\n"
 		" encrypter xtea gen -of \"/path/to/encoded.txt\"\n"
 		" encrypter xtea enc -size 2048 -kf \"/path/to/file.key\" -if \"/path/to/plain.txt\" -of \"/path/to/encoded.txt\"\n"
 		" encrypter xtea dec -kf \"/path/to/file.key\" -if \"/path/to/encoded.txt\" -of \"/path/to/decoded.txt\"\n"
-		"Для дополнительной информации, посетите https://github.com/HtieDgh/encrypter\n";
+		"Р”Р»СЏ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё, РїРѕСЃРµС‚РёС‚Рµ https://github.com/HtieDgh/encrypter\n";
 	this->_ef->write((char*)s.c_str(), s.size());
 }
 

@@ -26,7 +26,7 @@ namespace encrypt {
 	public:
 		virtual void run() = 0;
 
-		virtual void readme() = 0;// Вывод примеров использования алгоритма
+		virtual void readme() = 0;// Р’С‹РІРѕРґ РїСЂРёРјРµСЂРѕРІ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ Р°Р»РіРѕСЂРёС‚РјР°
 
 		void setOutput(OutputStrategy*);
 		void setInput(InputStrategy*);

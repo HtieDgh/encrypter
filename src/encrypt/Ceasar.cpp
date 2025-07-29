@@ -18,7 +18,7 @@
 #include<iomanip>
 #include<sstream>
 using namespace std;
-//TR<номер> - идентификатор для Модуля локализации. //TODO
+//TR<РЅРѕРјРµСЂ> - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РґР»СЏ РњРѕРґСѓР»СЏ Р»РѕРєР°Р»РёР·Р°С†РёРё. //TODO
 
 encrypt::Ceasar::Ceasar()
 {
@@ -62,26 +62,26 @@ encrypt::Ceasar::Ceasar(char* modename, map<string, const char*>& params, Output
 		{
 			this->maxsize(0);
 		} else {
-			this->maxsize(atoi(params["-size"]));//atoi() переводит char* в int
+			this->maxsize(atoi(params["-size"]));//atoi() РїРµСЂРµРІРѕРґРёС‚ char* РІ int
 		}
 
-		// НАЗНАЧЕНИЕ ВЫВОДА
+		// РќРђР—РќРђР§Р•РќРР• Р’Р«Р’РћР”Рђ
 		if (params.count("-of") == 0)
 		{
-			// По умолчанию вывод в stdout
+			// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІС‹РІРѕРґ РІ stdout
 			this->setOutput(new StdoutOutput());
 		} else {
-			// Путь до файла назначен, вывод в этот файл
+			// РџСѓС‚СЊ РґРѕ С„Р°Р№Р»Р° РЅР°Р·РЅР°С‡РµРЅ, РІС‹РІРѕРґ РІ СЌС‚РѕС‚ С„Р°Р№Р»
 			this->setOutput(new FileOutput(params["-of"]));
 		}
 
-		// НАЗНАЧЕНИЕ ВВОДА
+		// РќРђР—РќРђР§Р•РќРР• Р’Р’РћР”Рђ
 		if (params.count("-if") == 0)
 		{
-			// По умолчанию вывод в stdout
+			// РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІС‹РІРѕРґ РІ stdout
 			this->setInput(new StdoutInput());
 		} else {
-			// Путь до файла назначен, ввод из файла
+			// РџСѓС‚СЊ РґРѕ С„Р°Р№Р»Р° РЅР°Р·РЅР°С‡РµРЅ, РІРІРѕРґ РёР· С„Р°Р№Р»Р°
 			this->setInput(new FileInput(params["-if"]));
 		}
 	} catch (const encrypt::Ceasar::CeasarMode& err) {
@@ -118,24 +118,24 @@ void encrypt::Ceasar::run()
 		try {
 			while (true)
 			{
-				// ВВОД
+				// Р’Р’РћР”
 				if (this->_if->read(&_dec) != 1) {
 					break;
 				}
 
-				// ОБРАБОТКА
+				// РћР‘Р РђР‘РћРўРљРђ
 				_dec += ( _mode == encrypt::Ceasar::CeasarMode::DEC ? -1 : 1) * _key[_kd++];
 
 				if (_kd == strlen(_key)) {
 					_kd = 0;
 				}
 
-				// ВЫВОД
+				// Р’Р«Р’РћР”
 				this->_of->write(&_dec);
 
-				// СМЕНА ИТЕРАЦИИ _maxsize - количество байт которые надо считать с потока ввода
-				// В случае если -size опция не была задана _maxsize=0 и это условие всегда ложно,
-				// выход из цикла по окончанию входного потока
+				// РЎРњР•РќРђ РРўР•Р РђР¦РР _maxsize - РєРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°Р№С‚ РєРѕС‚РѕСЂС‹Рµ РЅР°РґРѕ СЃС‡РёС‚Р°С‚СЊ СЃ РїРѕС‚РѕРєР° РІРІРѕРґР°
+				// Р’ СЃР»СѓС‡Р°Рµ РµСЃР»Рё -size РѕРїС†РёСЏ РЅРµ Р±С‹Р»Р° Р·Р°РґР°РЅР° _maxsize=0 Рё СЌС‚Рѕ СѓСЃР»РѕРІРёРµ РІСЃРµРіРґР° Р»РѕР¶РЅРѕ,
+				// РІС‹С…РѕРґ РёР· С†РёРєР»Р° РїРѕ РѕРєРѕРЅС‡Р°РЅРёСЋ РІС…РѕРґРЅРѕРіРѕ РїРѕС‚РѕРєР°
 				if (++_d == _maxsize) {
 					break;
 				}
@@ -147,15 +147,15 @@ void encrypt::Ceasar::run()
 		}
 		break;
 	case encrypt::Ceasar::CeasarMode::NOMODE:
-		this->_ef->write((char*)("Такого режима не существует\n"), 28);//TR1
+		this->_ef->write((char*)("РўР°РєРѕРіРѕ СЂРµР¶РёРјР° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚\n"), 28);//TR1
 		this->readme();
 		break;
 	case encrypt::Ceasar::CeasarMode::README:
-		this->_ef->write((char*)("Вывод справки по использованию:\n"), 32);//TR2
+		this->_ef->write((char*)("Р’С‹РІРѕРґ СЃРїСЂР°РІРєРё РїРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЋ:\n"), 32);//TR2
 		this->readme();
 		break;
 	case encrypt::Ceasar::CeasarMode::NOKEY:
-		this->_ef->write((char*)("Параметр -k не задан\n"), 21);//TR3
+		this->_ef->write((char*)("РџР°СЂР°РјРµС‚СЂ -k РЅРµ Р·Р°РґР°РЅ\n"), 21);//TR3
 		this->readme();
 		break;
 	}
@@ -174,18 +174,18 @@ void encrypt::Ceasar::mode(encrypt::Ceasar::CeasarMode mode)
 void encrypt::Ceasar::readme()
 {
 	stringstream s;//TR5
-	s << "\nДля того, чтобы зашифровать файл выполните:\n"
+	s << "\nР”Р»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ Р·Р°С€РёС„СЂРѕРІР°С‚СЊ С„Р°Р№Р» РІС‹РїРѕР»РЅРёС‚Рµ:\n"
 		<< "\n"
 		<< "\tencrypter ceasar enc -k \"key to encrypt\" -size 10 -of \\path\\to\\encrypted.txt -if \\path\\to\\file.txt\n"
 		<< "\n"
-		<< "Для расшифровки:\n"
+		<< "Р”Р»СЏ СЂР°СЃС€РёС„СЂРѕРІРєРё:\n"
 		<< "\n"
 		<< "\tencrypter ceasar dec -k \"key to decrypt\" -size 10 -of \\path\\to\\decrypted.txt -if path\\to\\encrypted.txt\n"
 		<< "\n"
-		<< "Для консольного ввода вывода опции `-if` и `-of` можно не указывать:\n"
+		<< "Р”Р»СЏ РєРѕРЅСЃРѕР»СЊРЅРѕРіРѕ РІРІРѕРґР° РІС‹РІРѕРґР° РѕРїС†РёРё `-if` Рё `-of` РјРѕР¶РЅРѕ РЅРµ СѓРєР°Р·С‹РІР°С‚СЊ:\n"
 		<< "\n"
 		<< "\tencrypter ceasar {dec|enc} -k \"key to decrypt\"\n"
 		<< "\n"
-		<< "Для корректной расшифровки опции -size (если использовалась) и -k должны повторять значения при шифровании\n";
+		<< "Р”Р»СЏ РєРѕСЂСЂРµРєС‚РЅРѕР№ СЂР°СЃС€РёС„СЂРѕРІРєРё РѕРїС†РёРё -size (РµСЃР»Рё РёСЃРїРѕР»СЊР·РѕРІР°Р»Р°СЃСЊ) Рё -k РґРѕР»Р¶РЅС‹ РїРѕРІС‚РѕСЂСЏС‚СЊ Р·РЅР°С‡РµРЅРёСЏ РїСЂРё С€РёС„СЂРѕРІР°РЅРёРё\n";
 	this->_ef->write((char*)s.str().c_str(), s.str().size());
 }
