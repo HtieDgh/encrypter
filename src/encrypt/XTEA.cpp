@@ -80,7 +80,7 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 		{
 			this->_mode = XTEAMode::GEN;
 			if (params.count("-of") == 0) {
-				throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOOUTPUTGEN);
+				throw encrypt::XTEA::XTEAMode::NOOUTPUTGEN;
 			}
 		} else if (
 			!strcmp(modename, "-?") ||
@@ -92,9 +92,9 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 				)
 			)
 		{
-			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::README);
+			throw encrypt::XTEA::XTEAMode::README;
 		} else {
-			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOMODE);
+			throw encrypt::XTEA::XTEAMode::NOMODE;
 		}
 
 		// НАЗНАЧЕНИЕ ВЫВОДА
@@ -127,11 +127,11 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 		// исключения при сочетании режимов и опций
 		if (_mode == XTEAMode::ENC && params.count("-kf") == 0 && params.count("-of") == 0)
 		{
-			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOKFENC);			
+			throw encrypt::XTEA::XTEAMode::NOKFENC;			
 		}
 		if (_mode == XTEAMode::DEC && params.count("-kf") == 0 && params.count("-if") == 0)
 		{
-			throw encrypt::XTEA::XTEAMode(encrypt::XTEA::XTEAMode::NOKFDEC);
+			throw encrypt::XTEA::XTEAMode::NOKFDEC;
 		}
 
 		// без разницы это dec enc gen - _key должен быть заполнен перед выполнением!

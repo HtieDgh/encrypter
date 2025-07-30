@@ -44,16 +44,16 @@ encrypt::Ceasar::Ceasar(char* modename, map<string, const char*>& params, Output
 		} 
 		else if (!strcmp(modename, "-?") || !strcmp(modename, "-help")) 
 		{
-			throw encrypt::Ceasar::CeasarMode(encrypt::Ceasar::CeasarMode::README);
+			throw encrypt::Ceasar::CeasarMode::README;
 		} 
 		else 
 		{
-			throw encrypt::Ceasar::CeasarMode(encrypt::Ceasar::CeasarMode::NOMODE);
+			throw encrypt::Ceasar::CeasarMode::NOMODE;
 		}
 
 		if (params.count("-k") == 0)
 		{
-			throw encrypt::Ceasar::CeasarMode(encrypt::Ceasar::CeasarMode::NOKEY);
+			throw encrypt::Ceasar::CeasarMode::NOKEY;
 		}
 
 		this->key(params["-k"]);
@@ -84,8 +84,8 @@ encrypt::Ceasar::Ceasar(char* modename, map<string, const char*>& params, Output
 			// Путь до файла назначен, ввод из файла
 			this->setInput(new FileInput(params["-if"]));
 		}
-	} catch (const encrypt::Ceasar::CeasarMode& err) {
-		this->mode(err);
+	} catch (const encrypt::Ceasar::CeasarMode& e) {
+		this->mode(e);
 	}
 }
 

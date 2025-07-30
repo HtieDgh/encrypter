@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -9,12 +9,12 @@ namespace UnitTest
 	//Базовый абстрактный класс для 
 	class MockInputStrategy : public encrypt::InputStrategy {
 	public:
-		MockInputStrategy(const char* plain, size_t maxpos):
-		_plain(plain), _maxpos(maxpos), _pos(0){};
+		MockInputStrategy(const char* plain, size_t maxpos)
+			: _plain(plain), _maxpos(maxpos), _pos(0){};
 		long long read(char* data, std::streamsize size = 1) override {
 			std::streamsize i = 0;
 			for (; i < size; ++i) {
-				if (_pos == _maxpos) {
+				if (_pos > _maxpos) {
 					break;
 				}
 				data[i] = _plain[_pos];
@@ -61,8 +61,8 @@ namespace UnitTest
 		MockXTEAInputStrategy(const char* plain, size_t maxpos, char* encoded, size_t encSize, char* decoded, size_t decSize)
 			: MockInputStrategy(plain, maxpos)
 		{
-			this->_decoded.assign(decoded, encSize);
-			this->_encoded.assign(encoded, decSize);
+			this->_decoded.assign(decoded, decSize);
+			this->_encoded.assign(encoded, encSize);
 		}
 	};
 	class MockOutputStrategy : public encrypt::OutputStrategy
@@ -107,7 +107,7 @@ namespace UnitTest
 			a.setOutput(MOS);
 			a.run();
 
-			Assert::AreEqual<std::string>(MIS->getTrueEncoded(), MOS->res.str(), L"Трансформация plain->enc не верна");
+			Assert::AreEqual<std::string>(MIS->getTrueEncoded(), MOS->res.str(), L"Ceasar Трансформация plain->enc не верна");
 		}
 
 		TEST_METHOD(DecodeTest) {
@@ -129,7 +129,7 @@ namespace UnitTest
 	};
 	TEST_CLASS(XTEATest)
 	{
-	public:
+	public:		
 		TEST_METHOD(InitializedAlgorithmHasReadmeStateTest)
 		{
 			encrypt::XTEA a;
@@ -164,7 +164,7 @@ namespace UnitTest
 				0xe8, 0xf0, 0x21, 0xcb, 0xc0, 0x18, 0x96, 0xa8
 			};
 
-			MockXTEAInputStrategy* MIS = new MockXTEAInputStrategy(plain, 11, encoded,16, decoded,16);
+			MockXTEAInputStrategy* MIS = new MockXTEAInputStrategy(plain, 10, encoded,16, decoded,16);
 			MockOutputStrategy* MOS = new MockOutputStrategy();
 			std::map<std::string, const char*> params{};
 			encrypt::StderrOutput* errout = new encrypt::StderrOutput();
@@ -177,6 +177,43 @@ namespace UnitTest
 			a.run();
 			std::string s = MOS->res.str();
 			Assert::AreEqual<std::string>(MIS->getTrueEncoded(), MOS->res.str(), L"XTEA Трансформация plain->enc не верна");
+		}
+		TEST_METHOD(DecodeTest) {
+			//Раунды Фестеля 32
+			auto key = new uint32_t[4]{
+				0x1f55d069,
+				0x32a45e6a,
+				0x8db6e71b,
+				0xdf69d2f7
+			};
+
+			// "Привет мир!" CP1251 после encode (как-будто это plain)
+			char plain[16] =
+			{
+				0x59, 0x65, 0x70, 0xb6, 0x02, 0xf9, 0x93, 0x39,
+				0x75, 0xe6, 0x67, 0x91, 0xd4, 0xfa, 0x05, 0x9e
+			};
+			char* encoded = nullptr;
+			char decoded[16] =
+			{
+				0xcf, 0xf0, 0xe8, 0xe2, 0xe5, 0xf2, 0x20, 0xec,
+				0xe8, 0xf0, 0x21, 0xb6, 0x02, 0xf9, 0x93, 0x39
+			};
+
+
+			MockXTEAInputStrategy* MIS = new MockXTEAInputStrategy(plain, 16, encoded, 0, decoded, 16);
+			MockOutputStrategy* MOS = new MockOutputStrategy();
+			std::map<std::string, const char*> params{};
+			encrypt::StderrOutput* errout = new encrypt::StderrOutput();
+
+			encrypt::XTEA a("dec", params, errout);
+			a.setInput(MIS);
+			a.setOutput(MOS);
+			a.setKey(key);
+			a.mode(encrypt::XTEA::XTEAMode::DEC);
+			a.run();
+			std::string s = MOS->res.str();
+			Assert::AreEqual<std::string>(MIS->getTrueDecoded(), MOS->res.str(), L"XTEA Трансформация enc->plain не верна");
 		}
 	};
 }
