@@ -17,6 +17,7 @@
 #include<iostream>
 #include<fstream>
 #include<filesystem>
+#include <string>
 namespace fs = std::filesystem;
 namespace encrypt {
 
@@ -26,31 +27,30 @@ namespace encrypt {
 		virtual ~InputStrategy() = default;
 		// Возвращает количество прочитанных бит начиная с младшего индекса [data]
 		virtual long long read(char* data, std::streamsize size = 1) = 0;
+		virtual long long read(wchar_t* data, std::streamsize size = 1) = 0;
+		virtual long long readln(std::string& data, char delim = '\n') = 0;
+		virtual long long readln(std::wstring& data, wchar_t delim = '\n') = 0;
 	};
 	class StdoutInput : public InputStrategy {
 	public:
 		long long read(char* data, std::streamsize size = 1) override;
+		long long read(wchar_t* data, std::streamsize size = 1) override;
+		long long readln(std::string& data, char delim = '\n') override;
+		long long readln(std::wstring& data, wchar_t delim = '\n') override;
 	};
 
 	class FileInput : public InputStrategy {
 	private:
 		std::ifstream fin;
+		std::wifstream wfin;
 	public:
 		//path - путь до файла, openType - число, определенное в std::ios
 		FileInput(const char* path, int openType = std::ios::binary);
+		FileInput(std::wstring path, int openType = std::ios::binary);
 		long long read(char* data, std::streamsize size = 1) override;
+		long long read(wchar_t* data, std::streamsize size = 1) override;
+		long long readln(std::string& data, char delim = '\n') override;
+		long long readln(std::wstring& data, wchar_t delim = '\n') override;
 		~FileInput();
-	};
-
-	//TODO
-	class DirectoryInput : public InputStrategy {
-	private:	
-		FileInput* fin;
-		
-		void _getFilepaths(fs::path& fs_dirpath);
-	public:
-		DirectoryInput(const char* dirPath, int openType = std::ios::binary);
-		long long read(char* data, std::streamsize size = 1) override;
-		~DirectoryInput();
 	};
 }

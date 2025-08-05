@@ -101,7 +101,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)encrypter\x64\Debug;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Ceasar.obj;OutputStrategy.obj;InputStrategy.obj;AlgorithmStrategy.obj;XTEA.obj;Algorithm.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ceasar.obj;OutputStrategy.obj;InputStrategy.obj;AlgorithmStrategy.obj;XTEA.obj;Algorithm.obj;Translator.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>

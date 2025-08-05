@@ -5,7 +5,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-	   http://www.apache.org/licenses/LICENSE-2.0
+       http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,25 +13,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-#include "AlgorithmStrategy.h"
-#include<sstream>
-#include "Translator.h"
-using T = encrypt::Translator;
+#include "ConfigParser.h"
+#include<algorithm>
 
-void encrypt::AlgorithmStrategy::setAlgorithm(Algorithm* alg)
+std::wstring encrypt::ConfigParser::_trim(const std::wstring& str)
 {
-	this->_alg = alg;
-}
-
-void encrypt::AlgorithmStrategy::doAlgorithm()
-{
-		_alg->run();
-}
-encrypt::AlgorithmStrategy::~AlgorithmStrategy()
-{
-	if(_alg) delete _alg;
-};
-void encrypt::AlgorithmStrategy::readme(OutputStrategy* out)
-{	  
-	out->write(T::i()->getMsg({L"encrypter",1}));
+    size_t first = str.find_first_not_of(L" \t\r");
+    if (std::wstring::npos == first) {
+        return str;
+    }
+    size_t last = str.find_last_not_of(L" \t\r");
+    return str.substr(first, (last - first + 1));
 }

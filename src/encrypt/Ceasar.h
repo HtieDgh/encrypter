@@ -24,7 +24,7 @@ namespace encrypt {
 		const char* _key;	//Указатель на ключ-строку
 		char _dec;			//Промежуточный результат шифрования 1 байта
 		size_t _d,			//Счетчик итераций чтения с потока, используется в run()
-			_maxsize;		//Макс размер в байтах после которого следует остановить шифрование
+			   _maxsize;	//Макс размер в байтах после которого следует остановить шифрование
 	public:
 		enum class CeasarMode
 		{
@@ -48,24 +48,5 @@ namespace encrypt {
 		void readme() override;
 	private:
 		CeasarMode _mode;			//true если требуется расшифровать
-		
-	/*	class CesarBuilder {
-			private:
-				bool _mode;			
-				int _kd;			
-				const char* _key;	
-				char _dec;			
-				size_t _d,			
-					_maxsize;		
-				bool _ready = false;
-			public:
-				CesarBuilder();
-			
-				CesarBuilder& modename(char* modename);
-				CesarBuilder& key(const char* _key);
-				CesarBuilder& key(const char* _key);
-
-				Ceasar* build();
-		};*/
 	};
 }

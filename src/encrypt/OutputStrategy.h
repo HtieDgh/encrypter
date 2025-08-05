@@ -22,26 +22,36 @@ namespace encrypt {
 	public:
 		virtual ~OutputStrategy() = default;
 		virtual void write(char* data, std::streamsize size = 1) = 0;
+		virtual void write(wchar_t* data, std::streamsize size = 1) = 0;
+		virtual void write(std::wstring data) = 0;
 	};
 
 	class StdoutOutput : public OutputStrategy {
 	public:
 		void write(char* data, std::streamsize size = 1) override;
+		void write(wchar_t* data, std::streamsize size = 1) override;
+		void write(std::wstring data) override;
 	};
 
 	class StderrOutput : public OutputStrategy {
 	public:
 		void write(char* data, std::streamsize size = 1) override;
+		void write(wchar_t* data, std::streamsize size = 1) override;
+		void write(std::wstring data) override;
 	};
 
 	class FileOutput : public OutputStrategy {
 	private:
 		std::ofstream fout;
+		std::wofstream wfout;
 	public:
 		
 		//path - путь до файла, openType - число, определенное в std::ios
 		FileOutput(const char* path, int openType = std::ios::binary);
+		FileOutput(const wchar_t* path, int openType = std::ios::binary);
 		void write(char* data, std::streamsize size = 1) override;
+		void write(wchar_t* data, std::streamsize size = 1) override;
+		void write(std::wstring data) override;
 		~FileOutput();
 	};
 };

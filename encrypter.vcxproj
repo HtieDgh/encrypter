@@ -129,7 +129,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>/source-charset:utf-8 /execution-charset:.CP1251 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>/source-charset:utf-8 /execution-charset:.CP1251 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,7 +155,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>/source-charset:utf-8 /execution-charset:.CP1251 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -170,7 +170,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>/source-charset:utf-8 /execution-charset:.CP1251 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -186,7 +186,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalOptions>/source-charset:utf-8 /execution-charset:.CP1251 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -199,7 +199,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>/source-charset:utf-8 /execution-charset:.CP1251 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -212,7 +212,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalOptions>/source-charset:utf-8 /execution-charset:.CP1251 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -229,7 +229,7 @@
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Full</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalOptions>/source-charset:utf-8 /execution-charset:.CP1251 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -239,20 +239,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\encrypt\EcrypterConfig.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\encrypt\Algorithm.cpp" />
     <ClCompile Include="src\encrypt\AlgorithmStrategy.cpp" />
     <ClCompile Include="src\encrypt\Ceasar.cpp" />
+    <ClCompile Include="src\encrypt\ConfigParser.cpp" />
     <ClCompile Include="src\encrypt\InputStrategy.cpp" />
     <ClCompile Include="src\encrypt\OutputStrategy.cpp" />
+    <ClCompile Include="src\encrypt\Translator.cpp" />
     <ClCompile Include="src\encrypt\XTEA.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\encrypt\EncrypterConfig.h" />
     <ClInclude Include="src\encrypt\Algorithm.h" />
     <ClInclude Include="src\encrypt\AlgorithmStrategy.h" />
     <ClInclude Include="src\encrypt\Ceasar.h" />
+    <ClInclude Include="src\encrypt\ConfigParser.h" />
     <ClInclude Include="src\encrypt\InputStrategy.h" />
     <ClInclude Include="src\encrypt\OutputStrategy.h" />
+    <ClInclude Include="src\encrypt\Translator.h" />
     <ClInclude Include="src\encrypt\XTEA.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

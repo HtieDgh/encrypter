@@ -16,9 +16,10 @@
 #include "Ceasar.h"
 #include<iostream>
 #include<iomanip>
-#include<sstream>
+#include"Translator.h"
+using T = encrypt::Translator;
+
 using namespace std;
-//TR<номер> - идентификатор для Модуля локализации. //TODO
 
 encrypt::Ceasar::Ceasar()
 {
@@ -84,8 +85,14 @@ encrypt::Ceasar::Ceasar(char* modename, map<string, const char*>& params, Output
 			// Путь до файла назначен, ввод из файла
 			this->setInput(new FileInput(params["-if"]));
 		}
-	} catch (const encrypt::Ceasar::CeasarMode& e) {
+	} catch (const encrypt::Ceasar::CeasarMode& e)
+	{
 		this->mode(e);
+	} catch (const std::wstring& e)
+	{ 
+		// В случае отсутвия доступа к файлу
+		this->_ef->write(e);
+		this->mode(encrypt::Ceasar::CeasarMode::README);
 	}
 }
 
@@ -140,22 +147,23 @@ void encrypt::Ceasar::run()
 					break;
 				}
 			}
-		} catch (const std::exception& e)
+		} catch (const std::wstring& e)
 		{
-			cerr << e.what() << endl;
+			// В случае отсутвия доступа к файлу
+			this->_ef->write(e);
 			this->readme();
 		}
 		break;
 	case encrypt::Ceasar::CeasarMode::NOMODE:
-		this->_ef->write((char*)("Такого режима не существует\n"), 28);//TR1
+		this->_ef->write(T::i()->getMsg({L"ceasar",1}));
 		this->readme();
 		break;
 	case encrypt::Ceasar::CeasarMode::README:
-		this->_ef->write((char*)("Вывод справки по использованию:\n"), 32);//TR2
+		this->_ef->write(T::i()->getMsg({L"ceasar",2}));
 		this->readme();
 		break;
 	case encrypt::Ceasar::CeasarMode::NOKEY:
-		this->_ef->write((char*)("Параметр -k не задан\n"), 21);//TR3
+		this->_ef->write(T::i()->getMsg({L"ceasar",3}));
 		this->readme();
 		break;
 	}
@@ -172,20 +180,6 @@ void encrypt::Ceasar::mode(encrypt::Ceasar::CeasarMode mode)
 }
 
 void encrypt::Ceasar::readme()
-{
-	stringstream s;//TR5
-	s << "\nДля того, чтобы зашифровать файл выполните:\n"
-		<< "\n"
-		<< "\tencrypter ceasar enc -k \"key to encrypt\" -size 10 -of \\path\\to\\encrypted.txt -if \\path\\to\\file.txt\n"
-		<< "\n"
-		<< "Для расшифровки:\n"
-		<< "\n"
-		<< "\tencrypter ceasar dec -k \"key to decrypt\" -size 10 -of \\path\\to\\decrypted.txt -if path\\to\\encrypted.txt\n"
-		<< "\n"
-		<< "Для консольного ввода вывода опции `-if` и `-of` можно не указывать:\n"
-		<< "\n"
-		<< "\tencrypter ceasar {dec|enc} -k \"key to decrypt\"\n"
-		<< "\n"
-		<< "Для корректной расшифровки опции -size (если использовалась) и -k должны повторять значения при шифровании\n";
-	this->_ef->write((char*)s.str().c_str(), s.str().size());
+{	
+	this->_ef->write(T::i()->getMsg({L"ceasar",4}));
 }

@@ -22,6 +22,15 @@ namespace UnitTest
 			}
 			return i;
 		};
+		long long readln(std::string& data, char delim = '\n') override {
+			return 0;
+		};
+		long long readln(std::wstring& data, wchar_t delim = '\n') override {
+			return 0;
+		};
+		long long read(wchar_t* data, std::streamsize size = 1) override {
+			return 0;
+		};
 		std::string getTrueEncoded() {
 			return _encoded;
 		}
@@ -73,6 +82,12 @@ namespace UnitTest
 			res.write(data, size);
 		};
 		std::stringstream res;
+		void write(wchar_t* data, std::streamsize size = 1) override {
+			return;
+		}
+		void write(std::wstring data) {
+			return;
+		}
 	};
 
 	TEST_CLASS(CeasarTest)
