@@ -13,26 +13,25 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-#include "Algoritm.h"
+#include "AlgorithmStrategy.h"
+#include<sstream>
+#include "Translator.h"
+using T = encrypt::Translator;
 
-void encrypt::Algorithm::setOutput(OutputStrategy* s)
+void encrypt::AlgorithmStrategy::setAlgorithm(Algorithm* alg)
 {
-	this->_of= s;
+	this->_alg = alg;
 }
 
-void encrypt::Algorithm::setInput(InputStrategy * s)
+void encrypt::AlgorithmStrategy::doAlgorithm()
 {
-	this->_if= s;
+		_alg->run();
 }
-
-encrypt::Algorithm::~Algorithm()
+encrypt::AlgorithmStrategy::~AlgorithmStrategy()
 {
-	if (this->_of)
-	{
-		delete this->_of;
-	}
-	if (this->_if)
-	{
-		delete this->_if;
-	}
+	if(_alg) delete _alg;
+};
+void encrypt::AlgorithmStrategy::readme(OutputStrategy* out)
+{	  
+	out->write(T::i()->getMsg({L"encrypter",1}));
 }

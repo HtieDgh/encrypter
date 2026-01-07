@@ -1,0 +1,127 @@
+#exeptions
+[iostrategy]
+1=Failed to open file$
+2=Failed to read file: is file existing?$
+3=Failed to write file: is file existing?$
+
+[ceasar]
+1=There is no such mode
+$
+2=Displaying usage help:
+$
+3=The -k parameter is not specified
+$
+4=To encrypt the file, run:
+
+	encrypter ceasar enc -k "key to encrypt" -size 10 -of "\path\to\encrypted.txt" -if "\path\to\file.txt"
+
+To decode:
+
+	encrypter ceasar dec -k "key to decrypt" -size 10 -of "\path\to\decrypted.txt" -if "\path\to\encrypted.txt"
+
+For console I/O, the `-if` and `-of` options can be omitted:
+
+	encrypter ceasar {dec|enc} -k "key to decrypt"
+
+For correct decryption, the options `-size` (if used) and `-k` must repeat the values during encryption
+$
+
+# main controller
+[encrypter]
+1=Usage:
+  encrypter {alg name} {command} [options]
+
+Comment:
+  {alg name} e.g. ceasar
+  {command} and it's [options] depend on the algorithm, try to learn, by run:
+
+    encrypter ceasar -?
+
+The following algorithms are available {alg name}:
+  
+  ceasar
+  xtea
+
+To edit the configuration file, explore:
+  encypter config -?
+
+For more information, visit https://github.com/HtieDgh/encrypter
+$
+
+#encrypter config
+[encrypterconfig]
+1=Displaying usage help:
+$
+2=There is no such mode
+$
+3=Setting default settings...
+$
+4=Description: 
+  Reading and changing the configuration file
+
+Usage:
+  encrypter config {mode} [options]
+
+Modes:
+  r, read    Displaycurrent configuration
+  u, update  Update the configuration parameter(s)
+  c, create  Create the configuration file
+
+Following Options are available in create and update modes:
+  -locale {name}  Sets the locale for various messages 
+                  in current algorithm implementations
+
+Example:
+  encrypter config u -locale en-US
+$
+
+#тут тоже комментарии
+[xtea]
+1=Option -of in gen mode is required
+$
+2=Displaying usage help:
+$
+3=There is no such command
+$
+4=The enc command cannot be used without the -kf and -of options
+$
+5=The dec command cannot be used without the -kf and -if options
+$
+6=The key-file was not found or there is no access to it
+$
+7=The key-file has not been fully read
+$
+8=Usage:
+  encrypter xtea {command} [option]
+
+comands:
+  gen   Generate a key file for subsequent encryption.
+        The - of option is required
+  enc   Encrypt the file. If the -kf option is not 
+        specified, a key file will be generated in the same 
+		directory as -of. Using -kf and -of options at the same 
+		time is unacceptable.
+  dec   Decrypt the file. If the -kf option is not specified,
+        an attempt will be made to search for the key-file
+		in the same directory as -if, with the same name
+		with the `.key` extension. Use without the -kf
+		and -if options is unacceptable.
+
+Options:
+  -if "/path/to/plain.txt"   Specifing data input file
+  -of "/path/to/encoded.txt" Specifing data output file
+  -kf "/path/to/file.key"    Specifing path to key-file
+  -nr 32                     Determine a different number of 
+                             rounds of the Festel loop. 
+                             By default, the number is 32
+  -size 2048                 Limits the number of bytes needed 
+                             for encryption/decryption. 
+                             If the size of the source file is
+                             exceeded, the size of the output 
+                             file will not exceed the original 
+                             one by more than 1 block.
+Examples:
+  encrypter xtea gen -of "/path/to/encoded.txt"
+  encrypter xtea enc -size 2048 -kf "/path/to/file.key" -if "/path/to/plain.txt" -of "/path/to/encoded.txt"
+  encrypter xtea dec -kf "/path/to/file.key" -if "/path/to/encoded.txt" -of "/path/to/decoded.txt"
+$

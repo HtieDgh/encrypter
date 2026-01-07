@@ -14,22 +14,18 @@
    limitations under the License.
 */
 #pragma once
-#include"OutputStrategy.h"
-#include"InputStrategy.h"
+#include "Algorithm.h"
 namespace encrypt {
-	class Algorithm
+	class AlgorithmStrategy		
 	{
-	protected:
-		OutputStrategy* _of = nullptr;
-		InputStrategy* _if=nullptr;
-	public:								   
-		virtual bool mode() const = 0;
-		virtual void mode(bool isEnc)=0;
-		virtual void run()=0;
-
-		void setOutput(OutputStrategy*);
-		void setInput(InputStrategy*);
-		~Algorithm();
+	private:
+		Algorithm* _alg = nullptr;
+	public:
+		AlgorithmStrategy()=default;
+		void setAlgorithm(Algorithm*);
+		void doAlgorithm();
+		void readme(OutputStrategy*);
+		~AlgorithmStrategy();
 	};
 }
 

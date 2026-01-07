@@ -14,27 +14,25 @@
    limitations under the License.
 */
 #pragma once
-#include<iostream>
-#include<fstream>
+#include"OutputStrategy.h"
+#include"InputStrategy.h"
 namespace encrypt {
-	class InputStrategy
+	class Algorithm
 	{
+	protected:
+		OutputStrategy* _of = nullptr;
+		OutputStrategy* _ef = nullptr;
+		InputStrategy* _if = nullptr;
 	public:
-		virtual ~InputStrategy() = default;
-		virtual void read(char* data, std::streamsize size = 1) = 0;
-	};
-	class StdoutInput : public InputStrategy {
-	public:
-		void read(char* data, std::streamsize size = 1) override;
-	};
+		virtual void run() = 0;
 
-	class FileInput : public InputStrategy {
-	private:
-		std::ifstream fin;
-	public:
-		//path - путь до файла, openType - число, определенное в std::ios
-		FileInput(const char* path, std::ios_base::open_mode openType = std::ios::binary);
-		void read(char* data, std::streamsize size = 1) override;
-		~FileInput();
+		virtual void readme() = 0;// Р’С‹РІРѕРґ РїСЂРёРјРµСЂРѕРІ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ Р°Р»РіРѕСЂРёС‚РјР°
+
+		void setOutput(OutputStrategy*);
+		void setInput(InputStrategy*);
+		void setErrOutput(OutputStrategy*);
+		virtual ~Algorithm();
 	};
 }
+
+

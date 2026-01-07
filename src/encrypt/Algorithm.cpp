@@ -13,19 +13,41 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-#pragma once
-#include "Algoritm.h"
-namespace encrypt {
-	class AlgorithmStrategy		
-	{
-	private:
-		Algorithm* _alg = nullptr;
-	public:
-		AlgorithmStrategy()=default;
-		void setAlgorithm(Algorithm*);
-		void doAlgorithm();
-		~AlgorithmStrategy();
-	};
+#include "Algorithm.h"
+
+void encrypt::Algorithm::setOutput(OutputStrategy* s)
+{
+	if (this->_of) {
+		delete this->_of;
+	}
+	this->_of= s;
 }
 
+void encrypt::Algorithm::setInput(InputStrategy* s)
+{
+	if (this->_if) {
+		delete this->_if;
+	}
+	this->_if= s;
+}
 
+void encrypt::Algorithm::setErrOutput(OutputStrategy* s)
+{
+	if (this->_ef) {
+		delete this->_ef;
+	}
+	this->_ef = s;
+}
+
+encrypt::Algorithm::~Algorithm()
+{
+	if (this->_of) {
+		delete this->_of;
+	}
+	if (this->_if) {
+		delete this->_if;
+	}
+	if (this->_ef) {
+		delete this->_ef;
+	}
+}
