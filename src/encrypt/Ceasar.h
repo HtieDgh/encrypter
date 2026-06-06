@@ -16,37 +16,44 @@
 #pragma once
 #include"Algorithm.h"
 #include<map>
+
 namespace encrypt {
 	class Ceasar : public Algorithm
 	{
 	private:
-		int _kd;			//Смещение ключа, используются в run()
-		const char* _key;	//Указатель на ключ-строку
-		char _dec;			//Промежуточный результат шифрования 1 байта
-		size_t _d,			//Счетчик итераций чтения с потока, используется в run()
-			   _maxsize;	//Макс размер в байтах после которого следует остановить шифрование
+		size_t _keysize=0,	//Размер ключа, так как ключ может содержать null символы влияющие на работу strlen()
+			   _kd=0;			//Смещение ключа, используются в run()
+		size_t _d=0,			//Счетчик итераций чтения с потока, используется в run()
+			   _maxsize=0;	//Макс размер в байтах после которого следует остановить шифрование
+		char* _key=nullptr;		//Указатель на ключ-строку
+		char _dec=0;			//Промежуточный результат шифрования 1 байта
+		InputStrategy* _keyFile=nullptr;
 	public:
+		
 		enum class CeasarMode
 		{
-			ENC,
-			DEC,
-			NOMODE,
-			NOKEY,
-			README
+			ENC=5,
+			DEC=4,
+			NOMODE=1,
+			NOKEY=3,
+			README=2
 		};
-		Ceasar();
-		Ceasar(char* modename, std::map<std::string, const char*>& params,OutputStrategy* const errout);
+		Ceasar(std::wstring modename, std::map<std::wstring, std::wstring>& params, OutputStrategy* errout);
 
-		const char* key() const;
+		char* key() const;
+		void key(char* _key);
 		size_t maxsize() const;
-		void key(const char* _key);
 		void maxsize(size_t maxsize);
-
+		
+		void setKeyFile(InputStrategy* kf);
 		void run() override;
 		CeasarMode mode() const;
 		void mode(CeasarMode mode);
 		void readme() override;
+		
+		~Ceasar();
 	private:
-		CeasarMode _mode;			//true если требуется расшифровать
+		char _nextKey();
+		CeasarMode _mode;			//Текущий режим работы
 	};
 }

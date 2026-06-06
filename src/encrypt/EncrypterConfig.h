@@ -63,8 +63,8 @@ namespace encrypt {
             README
         };
         EncrypterConfig(
-            char* modename,
-            std::map<std::string, const char*>& params, 
+            std::wstring modename,
+            std::map<std::wstring, std::wstring>& params,
             OutputStrategy* errout,
             std::wstring cfgSave,
             EncrypterConfigParser* configParser

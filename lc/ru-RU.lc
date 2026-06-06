@@ -1,15 +1,18 @@
 #exeptions
 [iostrategy]
-1=Failed to open file$
-2=Failed to read file: is file existing?$
-3=Failed to write file: is file existing?$
+1=Failed to open file
+$
+2=Failed to read file: is file existing?
+$
+3=Failed to write file: is file existing?
+$
 
 [ceasar]
 1=Такого режима не существует
 $
 2=Вывод справки по использованию:
 $
-3=Параметр -k не задан
+3=Параметр -k (или -kf) не задан
 $
 4=Для того, чтобы зашифровать файл выполните:
 
@@ -47,6 +50,11 @@ $
 
 Для дополнительной информации, посетите https://github.com/HtieDgh/encrypter
 $
+2=Данный режим создан исключительно для вывода справки по использованию программы.
+Для дополнительной информации, посетите https://github.com/HtieDgh/encrypter
+$
+3=Такого алгоритма/команды не существует
+$
 
 #encrypter config
 [encrypterconfig]
@@ -75,7 +83,6 @@ $
   encrypter config u -locale en-US
 $
 
-#тут тоже комментарии
 [xtea]
 1=Команда gen требует обязательного использования опции -of
 $
@@ -120,4 +127,40 @@ $
   encrypter xtea gen -of "/path/to/encoded.txt"
   encrypter xtea enc -size 2048 -kf "/path/to/file.key" -if "/path/to/plain.txt" -of "/path/to/encoded.txt"
   encrypter xtea dec -kf "/path/to/file.key" -if "/path/to/encoded.txt" -of "/path/to/decoded.txt"
+$
+
+#Режим интерпретатора команд. вывод справки
+[interpritationmode]
+1=Использование:
+  {<команда и опции выбранного алгоритма шифрования> | <сигнал>}
+
+Сигнал:
+  ?   Вывести данную справку
+  !   Завершить выполнение программы
+
+Сейчас доступны для выполнения в режиме интерпретатора команд только алгоритмы:
+  - XTEA 
+  - ceasar
+  - chacha
+$
+2=Для справки введите ?
+$
+
+#KeystreamGenerator
+[KeystreamGenerator]
+1=Использование:
+  encrypter chacha {режим} [опции]
+
+Режимы:
+  gen   Сгенерировать ключевую гамму. По умолчанию генерирует 16 байт.
+
+Опции:
+  -of "/path/to/gama.txt"    Вывод гаммы в файл
+  -kf "/path/to/key.txt"     Ключ-файл из 16 байтов
+  -size 16                   Количестов байт в ключевой гамме
+$
+2=Опция -kf обязательна
+$
+#nomode
+3=Не выбран режим работы
 $

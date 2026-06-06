@@ -12,5 +12,6 @@
 #include<map>
 #include<filesystem>
 #include "..\..\src\encrypt\Ceasar.h"
+#include "..\..\src\encrypt\KeystreamGenerator.h"
 #include "..\..\src\encrypt\XTEA.h"
 #endif //PCH_H

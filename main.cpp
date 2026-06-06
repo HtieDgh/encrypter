@@ -21,10 +21,14 @@
 #include<map>
 #include "src\encrypt\Ceasar.h"
 #include "src\encrypt\XTEA.h"
-#include "src\encrypt\AlgorithmStrategy.h"
+#include "src\encrypt\Controller.h"
 #include "src\encrypt\EncrypterConfig.h"
 #include "src\encrypt\ConfigParser.h"
 #include "src\encrypt\Translator.h"
+#include "src\encrypt\InterpretationMode.h"
+#include "src\encrypt\EncryptReadme.h"
+#include "src\encrypt\General.h"
+#include "src\encrypt\KeystreamGenerator.h"
 
 #define DEFAULT_LC_PATH  L"./lc"
 #define DEFAULT_LC_EXT  L".lc"
@@ -33,29 +37,19 @@
 using namespace std;
 using namespace encrypt;
 using T = encrypt::Translator;
+using G = encrypt::General;
 
-int main(int argc, char* argv[], char* envp[]){
+
+int wmain(int argc, wchar_t* argv[], wchar_t* envp[]){
 	setlocale(LC_ALL, ".utf8");
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
-	AlgorithmStrategy* controller=new AlgorithmStrategy();
+	Controller* controller=new Controller();
 	StderrOutput* errout = new StderrOutput();
-	map<string,const char*> params;
 
 	// ОПРЕДЕЛЕНИЕ ПАРАМЕТРОВ И ИХ ЗНАЧЕНИЙ
-		for (int i = 3; i < argc; i++) {
-			if (argv[i][0] == '-' && i + 1 < argc && argv[i + 1][0] != '-')
-			{
-			// параметр со значением
-				params[argv[i]] = argv[i + 1];
-			}
-			else if (argv[i][0] == '-')
-			{
-			// параметр без значения, например флаг
-				params[argv[i]] = "";
-			}
-		}
+		auto params = G::buildParams(argv, argc);
 
 	//ЧТЕНИЕ CONFIG ФАЙЛА
 		FileInput* FI = nullptr;
@@ -63,38 +57,36 @@ int main(int argc, char* argv[], char* envp[]){
 		{
 			FI = new FileInput(DEFAULT_CFG_PATH);
 		
-		} catch (const std::wstring&e)
+		} catch (...)
 		{
-			errout->write(e);
-			controller->readme(errout);
+			errout->write(L"config file can't be opened, is it existing?");//TODO default strings should be hardcoded?
 			return -1;
 		}
 		EncrypterConfigParser* ECP = new EncrypterConfigParser(FI);
 		delete FI;
 
 	// ОПРЕДЕЛЕНИЕ ЯЗЫКА ИНФОРМАЦИОННЫХ СООБЩЕНИЙ
-		wstring locale = DEFAULT_LC_PATH; locale += L'/' + ECP->getWstring(L"locale", L"ru-RU") + DEFAULT_LC_EXT;
+		wstring locale = DEFAULT_LC_PATH; locale += L'/' + ECP->getWstring(L"locale", L"en-US") + DEFAULT_LC_EXT;
 		T::i(new FileInput(locale), new TranslatorParser());
 
-	// ВЫВОД СПРАВКИ ПРИ НЕДОСТАТКЕ АРГУМЕНТОВ
+
+
+	// ПОДГОТОВКА К ВЫПОЛНЕНИЮ: ВЫБОР КЛАССА РЕАЛИЗАЦИИ
+
+		// ВЫВОД СПРАВКИ ПРИ НЕДОСТАТКЕ АРГУМЕНТОВ
 		if (argc <= 2)
 		{
-			controller->readme(errout);
-			delete controller;
-			return 0;
-		}
-	// ПОДГОТОВКА К ВЫПОЛНЕНИЮ: НАСТРОЙКА РЕЖИМА В КОНСТРУКТОРАХ КЛАССОВ-РЕАЛИЗАЦИЙ
-		if (!strcmp(argv[1], "ceasar"))			// АГЛОРИТМ ЦЕЗАРЯ
+			controller->setAlgorithm(new EncryptReadme(errout));
+
+		} else if ( G::areEqual(argv[1], L"ceasar") )			// АГЛОРИТМ ЦЕЗАРЯ
 		{
-			// Подтверждение алгоритма
 			controller->setAlgorithm(new Ceasar(argv[2], params, errout));
 
-		} else if (!strcmp(argv[1], "xtea"))	// XTEA
+		} else if ( G::areEqual(argv[1], L"xtea") )	// XTEA
 		{
-			// Подтверждение алгоритма
 			controller->setAlgorithm(new XTEA(argv[2], params, errout));
 
-		} else if (!strcmp(argv[1], "config"))	// CONFIG
+		} else if ( G::areEqual(argv[1], L"config") )	// CONFIG
 		{
 			controller->setAlgorithm(new EncrypterConfig(
 				argv[2],
@@ -104,13 +96,27 @@ int main(int argc, char* argv[], char* envp[]){
 				ECP
 			));
 
-		}else
+		} else if ( G::areEqual(argv[1], L"i") ) 
 		{
-			controller->readme(errout);
+			controller->setAlgorithm(new InterpretationMode(
+				argv[2],
+				new StdInput(),
+				new StderrOutput(),
+				errout
+			));
+		} else if (G::areEqual(argv[1], L"chacha"))
+		{
+			controller->setAlgorithm(new KeystreamGenerator(argv[2], params, errout));
+		}
+		else
+		{
+			controller->setAlgorithm(new EncryptReadme(errout, EncryptReadme::PRESTATE::noalg));
 		}
 
 	// ВЫПОЛНЕНИЕ АЛГОРИТМА
 		controller->doAlgorithm();
+
 		delete controller;
 	return 0;
 }
+

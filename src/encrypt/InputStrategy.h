@@ -30,13 +30,20 @@ namespace encrypt {
 		virtual long long read(wchar_t* data, std::streamsize size = 1) = 0;
 		virtual long long readln(std::string& data, char delim = '\n') = 0;
 		virtual long long readln(std::wstring& data, wchar_t delim = '\n') = 0;
+		//Сброс потока, для чтения его снова
+		virtual void reset()=0;
+		virtual long long operator>> (std::wstring& data)=0;
+		virtual long long operator>> (std::string& data)=0;
 	};
-	class StdoutInput : public InputStrategy {
+	class StdInput : public InputStrategy {
 	public:
 		long long read(char* data, std::streamsize size = 1) override;
 		long long read(wchar_t* data, std::streamsize size = 1) override;
 		long long readln(std::string& data, char delim = '\n') override;
 		long long readln(std::wstring& data, wchar_t delim = '\n') override;
+		void reset() override;
+		long long operator>> (std::wstring& data)override;
+		long long operator>> (std::string& data)override;
 	};
 
 	class FileInput : public InputStrategy {
@@ -51,6 +58,9 @@ namespace encrypt {
 		long long read(wchar_t* data, std::streamsize size = 1) override;
 		long long readln(std::string& data, char delim = '\n') override;
 		long long readln(std::wstring& data, wchar_t delim = '\n') override;
+		void reset() override;
+		long long operator>> (std::wstring& data)override;
+		long long operator>> (std::string& data)override;
 		~FileInput();
 	};
 }

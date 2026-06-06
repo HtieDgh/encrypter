@@ -13,20 +13,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-#pragma once
-#include "Algorithm.h"
-namespace encrypt {
-	class AlgorithmStrategy		
-	{
-	private:
-		Algorithm* _alg = nullptr;
-	public:
-		AlgorithmStrategy()=default;
-		void setAlgorithm(Algorithm*);
-		void doAlgorithm();
-		void readme(OutputStrategy*);
-		~AlgorithmStrategy();
-	};
+#include "Controller.h"
+#include<sstream>
+#include "Translator.h"
+using T = encrypt::Translator;
+
+void encrypt::Controller::setAlgorithm(Algorithm* alg)
+{
+	if(_alg) delete _alg;
+	this->_alg = alg;
 }
 
-
+void encrypt::Controller::doAlgorithm()
+{
+	_alg->run();
+}
+encrypt::Controller::~Controller()
+{
+	if(_alg) delete _alg;
+};

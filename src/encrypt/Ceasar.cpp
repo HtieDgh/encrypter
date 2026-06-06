@@ -17,73 +17,77 @@
 #include<iostream>
 #include<iomanip>
 #include"Translator.h"
+#include"General.h"
+
+using G = encrypt::General;
 using T = encrypt::Translator;
 
 using namespace std;
 
-encrypt::Ceasar::Ceasar()
-{
-	_mode = encrypt::Ceasar::CeasarMode::README;
-	_d = 0, _kd = 0;
-	this->key(new char[8] {"default"});
-	_dec = 0;
-	this->maxsize(0);
-	this->setErrOutput(new StderrOutput());
-}
-
-encrypt::Ceasar::Ceasar(char* modename, map<string, const char*>& params, OutputStrategy* const errout)
+encrypt::Ceasar::Ceasar(std::wstring modename, std::map<std::wstring, std::wstring>& params, OutputStrategy* const errout)
 {
 	this->setErrOutput(errout);
 	try {
-		if (!strcmp(modename, "enc"))
+		if (G::areEqual(modename, L"enc"))
 		{
 			this->mode(encrypt::Ceasar::CeasarMode::ENC);
-		}
-		else if (!strcmp(modename, "dec"))
+		} else if (G::areEqual(modename, L"dec"))
 		{
 			this->mode(encrypt::Ceasar::CeasarMode::DEC);
-		} 
-		else if (!strcmp(modename, "-?") || !strcmp(modename, "-help")) 
+		} else if (G::areEqual(modename, L"-?") || G::areEqual(modename, L"-help"))
 		{
 			throw encrypt::Ceasar::CeasarMode::README;
-		} 
-		else 
+		} else
 		{
 			throw encrypt::Ceasar::CeasarMode::NOMODE;
 		}
-
-		if (params.count("-k") == 0)
+		//ЧТЕНИЕ КЛЮЧА
+		if (params.count(L"-k") == 0 && params.count(L"-kf")==0)
 		{
 			throw encrypt::Ceasar::CeasarMode::NOKEY;
 		}
-
-		this->key(params["-k"]);
-
-		if (params.count("-size") == 0)
-		{
-			this->maxsize(0);
+		if (params.count(L"-kf") != 0) {
+			this->setKeyFile(new FileInput(ws2s(params[L"-kf"]).c_str()));
+			this->_key = new char[1];
 		} else {
-			this->maxsize(atoi(params["-size"]));//atoi() переводит char* в int
+			//перевод wchar
+			this->_keysize = params[L"-k"].size() * sizeof(wchar_t);
+			this->_key = new char[this->_keysize + 1] {};
+			memcpy(this->_key, params[L"-k"].c_str(), this->_keysize);
+			//this->key( params[L"-k"] );
+		}
+		
+
+		if (params.count(L"-size") != 0)
+		{
+			this->maxsize(_wtoll(params[L"-size"].c_str()));//_wtoll() переводит wchar_t* в long long
+		}
+		else if(params.count(L"-s") != 0)
+		{
+			this->maxsize(_wtoll(params[L"-s"].c_str()));
+		}
+		else {
+			this->maxsize(0);
 		}
 
 		// НАЗНАЧЕНИЕ ВЫВОДА
-		if (params.count("-of") == 0)
+		if (params.count(L"-of") == 0)
 		{
 			// По умолчанию вывод в stdout
-			this->setOutput(new StdoutOutput());
+			this->setOutput(new StdOutput());
 		} else {
 			// Путь до файла назначен, вывод в этот файл
-			this->setOutput(new FileOutput(params["-of"]));
+			this->setOutput(new FileOutput(ws2s(params[L"-of"]).c_str()));
 		}
 
 		// НАЗНАЧЕНИЕ ВВОДА
-		if (params.count("-if") == 0)
+		if (params.count(L"-if") == 0)
 		{
 			// По умолчанию вывод в stdout
-			this->setInput(new StdoutInput());
+			this->setInput(new StdInput());
 		} else {
 			// Путь до файла назначен, ввод из файла
-			this->setInput(new FileInput(params["-if"]));
+			this->setInput(new FileInput(ws2s(params[L"-if"]).c_str()));
 		}
 	} catch (const encrypt::Ceasar::CeasarMode& e)
 	{
@@ -96,7 +100,7 @@ encrypt::Ceasar::Ceasar(char* modename, map<string, const char*>& params, Output
 	}
 }
 
-const char* encrypt::Ceasar::key() const
+char* encrypt::Ceasar::key() const
 {
 	return this->_key;
 }
@@ -106,7 +110,7 @@ size_t encrypt::Ceasar::maxsize() const
 	return this->_maxsize;
 }
 
-void encrypt::Ceasar::key(const char* _key)
+void encrypt::Ceasar::key(char* _key)
 {
 	this->_key = _key;
 }
@@ -114,6 +118,14 @@ void encrypt::Ceasar::key(const char* _key)
 void encrypt::Ceasar::maxsize(size_t maxsize)
 {
 	this->_maxsize = maxsize;
+}
+
+void encrypt::Ceasar::setKeyFile(InputStrategy* kf)
+{
+	if (this->_keyFile) {
+		delete this->_keyFile;
+	}
+	this->_keyFile = kf;
 }
 
 void encrypt::Ceasar::run()
@@ -131,11 +143,7 @@ void encrypt::Ceasar::run()
 				}
 
 				// ОБРАБОТКА
-				_dec += ( _mode == encrypt::Ceasar::CeasarMode::DEC ? -1 : 1) * _key[_kd++];
-
-				if (_kd == strlen(_key)) {
-					_kd = 0;
-				}
+				_dec += (_mode == encrypt::Ceasar::CeasarMode::DEC ? -1 : 1) * _nextKey();
 
 				// ВЫВОД
 				this->_of->write(&_dec);
@@ -155,19 +163,14 @@ void encrypt::Ceasar::run()
 		}
 		break;
 	case encrypt::Ceasar::CeasarMode::NOMODE:
-		this->_ef->write(T::i()->getMsg({L"ceasar",1}));
-		this->readme();
-		break;
 	case encrypt::Ceasar::CeasarMode::README:
-		this->_ef->write(T::i()->getMsg({L"ceasar",2}));
-		this->readme();
-		break;
 	case encrypt::Ceasar::CeasarMode::NOKEY:
-		this->_ef->write(T::i()->getMsg({L"ceasar",3}));
+		this->_ef->write(T::i()->msg({L"ceasar",(size_t)_mode}));//свести enum к числу-идентификатору строки
 		this->readme();
 		break;
 	}
 }
+
 
 encrypt::Ceasar::CeasarMode encrypt::Ceasar::mode() const
 {
@@ -181,5 +184,29 @@ void encrypt::Ceasar::mode(encrypt::Ceasar::CeasarMode mode)
 
 void encrypt::Ceasar::readme()
 {	
-	this->_ef->write(T::i()->getMsg({L"ceasar",4}));
+	this->_ef->write(T::i()->msg({L"ceasar",4}));
+}
+
+encrypt::Ceasar::~Ceasar()
+{
+	delete[] _key;
+	if (_keyFile) delete _keyFile;
+}
+
+char encrypt::Ceasar::_nextKey()
+{
+	//если _keyFile назначен то выодить следующий ключ из него, иначе из _key
+	if (this->_keyFile == nullptr) {
+		if (_kd == _keysize) {
+			_kd = 0;
+		}
+		return _key[_kd++];
+	} else {
+		if (this->_keyFile->read(_key) != 1) {
+			this->_keyFile->reset();
+			this->_keyFile->read(_key);
+		};
+		return _key[0];
+	}
+
 }

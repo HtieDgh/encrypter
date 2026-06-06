@@ -403,3 +403,5 @@ chlgsample*
 doc/
 vendor/*
 !vendor/*.bat
+test/UnitTest/chacha20.key
+test/UnitTest/gamma.key

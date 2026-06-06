@@ -104,8 +104,8 @@ std::map<std::wstring, std::wstring> encrypt::EncrypterConfigParser::getAll()
 }
 
 encrypt::EncrypterConfig::EncrypterConfig(
-    char* modename,
-    std::map<std::string, const char*>& params,
+    std::wstring modename,
+    std::map<std::wstring, std::wstring>& params,
     OutputStrategy* errout,
     std::wstring cfgSave,
     EncrypterConfigParser* configParser
@@ -116,21 +116,21 @@ encrypt::EncrypterConfig::EncrypterConfig(
     this->_cfgSave = cfgSave;
     this->setConfigParser(configParser);
     try {
-        if (!strcmp(modename, "r") || !strcmp(modename, "read"))
+        if (modename == L"r" || modename == L"read")
         {
             mode(encrypt::EncrypterConfig::ConfigMode::READ);
         }
-        else if (!strcmp(modename, "u") || !strcmp(modename, "update"))
+        else if (modename == L"u" || modename == L"update")
         {
             mode(encrypt::EncrypterConfig::ConfigMode::UPDATE);
         }
-        else if (!strcmp(modename, "c") || !strcmp(modename, "create"))
+        else if (modename == L"c" || modename == L"create")
         {
             mode(encrypt::EncrypterConfig::ConfigMode::CREATE);
         }
         else if (
-            !strcmp(modename, "-?") ||
-            !strcmp(modename, "-help")
+            modename == L"-?" ||
+            modename == L"-help"
             )
         {
             throw encrypt::EncrypterConfig::ConfigMode::README;
@@ -144,7 +144,7 @@ encrypt::EncrypterConfig::EncrypterConfig(
         // Если не create то установить значения конфига по умолчанию
         if (this->_mode != encrypt::EncrypterConfig::ConfigMode::CREATE && _configParser->empty())
         {
-            this->_ef->write(T::i()->getMsg({L"encrypterconfig",3}));
+            this->_ef->write(T::i()->msg({L"encrypterconfig",3}));
             this->setString(L"locale", L"ru-RU");
         }
 
@@ -153,10 +153,9 @@ encrypt::EncrypterConfig::EncrypterConfig(
             this->_mode == encrypt::EncrypterConfig::ConfigMode::CREATE ||
             this->_mode == encrypt::EncrypterConfig::ConfigMode::UPDATE
             ) {
-            if (params.count("-locale"))
+            if (params.count(L"-locale"))
             {
-                const char* cc{params["-locale"]};//TODO danger casting
-                this->setString(L"locale", std::wstring(cc, cc + strlen(cc)));
+                this->setString(L"locale", params[L"-locale"]);
             }
         }
         
@@ -175,7 +174,7 @@ encrypt::EncrypterConfig::~EncrypterConfig()
 
 void encrypt::EncrypterConfig::readme()
 {
-    this->_ef->write(T::i()->getMsg({L"encrypterconfig",4}));
+    this->_ef->write(T::i()->msg({L"encrypterconfig",4}));
 }
 
 
@@ -240,11 +239,11 @@ void encrypt::EncrypterConfig::run()
         }
         break;
     case encrypt::EncrypterConfig::ConfigMode::README:
-        this->_ef->write(T::i()->getMsg({L"encrypterconfig",1}));
+        this->_ef->write(T::i()->msg({L"encrypterconfig",1}));
         this->readme();
         break;
     case encrypt::EncrypterConfig::ConfigMode::NOMODE:
-        this->_ef->write(T::i()->getMsg({L"encrypterconfig",2}));
+        this->_ef->write(T::i()->msg({L"encrypterconfig",2}));
         this->readme();
         break;
     default:

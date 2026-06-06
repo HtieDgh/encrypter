@@ -1,15 +1,18 @@
 #exeptions
 [iostrategy]
-1=Failed to open file$
-2=Failed to read file: is file existing?$
-3=Failed to write file: is file existing?$
+1=Failed to open file
+$
+2=Failed to read file: is file existing?
+$
+3=Failed to write file: is file existing?
+$
 
 [ceasar]
 1=There is no such mode
 $
 2=Displaying usage help:
 $
-3=The -k parameter is not specified
+3=The -k (or -kf) parameter is not specified
 $
 4=To encrypt the file, run:
 
@@ -47,6 +50,11 @@ To edit the configuration file, explore:
 
 For more information, visit https://github.com/HtieDgh/encrypter
 $
+2=This class is used to print program's help message.
+For more information, visit https://github.com/HtieDgh/encrypter
+$
+3=This algorithm/command is not existing
+$
 
 #encrypter config
 [encrypterconfig]
@@ -75,7 +83,6 @@ Example:
   encrypter config u -locale en-US
 $
 
-#тут тоже комментарии
 [xtea]
 1=Option -of in gen mode is required
 $
@@ -124,4 +131,18 @@ Examples:
   encrypter xtea gen -of "/path/to/encoded.txt"
   encrypter xtea enc -size 2048 -kf "/path/to/file.key" -if "/path/to/plain.txt" -of "/path/to/encoded.txt"
   encrypter xtea dec -kf "/path/to/file.key" -if "/path/to/encoded.txt" -of "/path/to/decoded.txt"
+$
+
+[interpritationmode]
+1=Usage:
+  {<Chosen algorithm's commands and options> | <Signal>}
+
+Signal:
+  ?   Print current help
+  !   Exit the interpretation mode and close program
+List of algoritms are available in interpretation mode now:
+  - XTEA 
+  - ceasar
+$
+2=To get help enter "?"
 $

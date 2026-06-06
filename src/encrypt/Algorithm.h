@@ -31,8 +31,12 @@ namespace encrypt {
 		void setOutput(OutputStrategy*);
 		void setInput(InputStrategy*);
 		void setErrOutput(OutputStrategy*);
+		std::wstring s2ws(const std::string& str);
+		std::string ws2s(const std::wstring& wstr);
+
 		virtual ~Algorithm();
 	};
+
 }
 
 

@@ -239,24 +239,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\encrypt\General.cpp" />
+    <ClCompile Include="src\encrypt\EncryptReadme.cpp" />
+    <ClCompile Include="src\encrypt\InterpretationMode.cpp" />
     <ClCompile Include="src\encrypt\EcrypterConfig.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\encrypt\Algorithm.cpp" />
-    <ClCompile Include="src\encrypt\AlgorithmStrategy.cpp" />
+    <ClCompile Include="src\encrypt\Controller.cpp" />
     <ClCompile Include="src\encrypt\Ceasar.cpp" />
     <ClCompile Include="src\encrypt\ConfigParser.cpp" />
     <ClCompile Include="src\encrypt\InputStrategy.cpp" />
+    <ClCompile Include="src\encrypt\KeystreamGenerator.cpp" />
     <ClCompile Include="src\encrypt\OutputStrategy.cpp" />
     <ClCompile Include="src\encrypt\Translator.cpp" />
     <ClCompile Include="src\encrypt\XTEA.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\encrypt\General.h" />
+    <ClInclude Include="src\encrypt\EncryptReadme.h" />
+    <ClInclude Include="src\encrypt\InterpretationMode.h" />
     <ClInclude Include="src\encrypt\EncrypterConfig.h" />
     <ClInclude Include="src\encrypt\Algorithm.h" />
-    <ClInclude Include="src\encrypt\AlgorithmStrategy.h" />
+    <ClInclude Include="src\encrypt\Controller.h" />
     <ClInclude Include="src\encrypt\Ceasar.h" />
     <ClInclude Include="src\encrypt\ConfigParser.h" />
     <ClInclude Include="src\encrypt\InputStrategy.h" />
+    <ClInclude Include="src\encrypt\KeystreamGenerator.h" />
     <ClInclude Include="src\encrypt\OutputStrategy.h" />
     <ClInclude Include="src\encrypt\Translator.h" />
     <ClInclude Include="src\encrypt\XTEA.h" />

@@ -67,31 +67,31 @@ encrypt::XTEA::XTEA()
 	this->_mode = XTEAMode::README;
 }
 
-encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, OutputStrategy* const errout)
+encrypt::XTEA::XTEA(std::wstring modename, std::map<std::wstring, std::wstring>& params, OutputStrategy* const errout)
 {
 	this->setErrOutput(errout);
 	try
 	{
 		// ВЫБОР РЕЖИМА
-		if (!strcmp(modename, "enc"))
+		if (modename == L"enc")
 		{
 			this->_mode = XTEAMode::ENC;
-		} else if (!strcmp(modename, "dec"))
+		} else if (modename == L"dec")
 		{
 			this->_mode = XTEAMode::DEC;
-		} else if (!strcmp(modename, "gen"))
+		} else if (modename == L"gen")
 		{
 			this->_mode = XTEAMode::GEN;
-			if (params.count("-of") == 0) {
+			if (params.count(L"-of") == 0) {
 				throw encrypt::XTEA::XTEAMode::NOOUTPUTGEN;
 			}
 		} else if (
-			!strcmp(modename, "-?") ||
-			!strcmp(modename, "-help") ||
+			modename == L"-?" ||
+			modename == L"-help" ||
 			(
-				params.count("-kf") == 0 &&
-				params.count("-of") == 0 &&
-				params.count("-if") == 0
+				params.count(L"-kf") == 0 &&
+				params.count(L"-of") == 0 &&
+				params.count(L"-if") == 0
 				)
 			)
 		{
@@ -101,62 +101,62 @@ encrypt::XTEA::XTEA(char* modename, std::map<std::string, const char*>& params, 
 		}
 
 		// НАЗНАЧЕНИЕ ВЫВОДА
-		if (params.count("-of") == 0)
+		if (params.count(L"-of") == 0)
 		{
 			// По умолчанию вывод в stdout
-			this->setOutput(new StdoutOutput());
+			this->setOutput(new StdOutput());
 		} else {
 			// Путь до файла назначен, вывод в этот файл
-			this->setOutput(new FileOutput(params["-of"]));
+			this->setOutput(new FileOutput(params[L"-of"].c_str()));
 		}
 
 		// НАЗНАЧЕНИЕ ВВОДА
-		if (params.count("-if") == 0)
+		if (params.count(L"-if") == 0)
 		{
 			// По умолчанию ввод из stdin иначе ввод из файла
-			this->setInput(new StdoutInput());
+			this->setInput(new StdInput());
 		} else {
-			this->setInput(new FileInput(params["-if"]));
+			this->setInput(new FileInput(params[L"-if"]));
 		}
 		
-		if (_mode != XTEAMode::GEN && params.count("-size") != 0) {
-			this->_maxsize = atoi(params["-size"]);//atoi() переводит char* в int
+		if (_mode != XTEAMode::GEN && params.count(L"-size") != 0) {
+			this->_maxsize = _wtoll(params[L"-size"].c_str());//_wtoll() переводит char* в int
 		}
 
-		if (params.count("-nr") != 0)
+		if (params.count(L"-nr") != 0)
 		{
-			this->_nr = atoi(params["-nr"]);
+			this->_nr = _wtoll(params[L"-nr"].c_str());
 		}
 		// исключения при сочетании режимов и опций
-		if (_mode == XTEAMode::ENC && params.count("-kf") == 0 && params.count("-of") == 0)
+		if (_mode == XTEAMode::ENC && params.count(L"-kf") == 0 && params.count(L"-of") == 0)
 		{
 			throw encrypt::XTEA::XTEAMode::NOKFENC;			
 		}
-		if (_mode == XTEAMode::DEC && params.count("-kf") == 0 && params.count("-if") == 0)
+		if (_mode == XTEAMode::DEC && params.count(L"-kf") == 0 && params.count(L"-if") == 0)
 		{
 			throw encrypt::XTEA::XTEAMode::NOKFDEC;
 		}
 
 		// без разницы это dec enc gen - _key должен быть заполнен перед выполнением!
-		if (params.count("-kf") != 0 && _mode != XTEAMode::GEN)
+		if (params.count(L"-kf") != 0 && _mode != XTEAMode::GEN)
 		{
-			_key = reedKeyFile(params["-kf"]);
+			_key = reedKeyFile( reinterpret_cast<const char*>(params[L"-kf"].c_str()) );
 		} else if (
-			params.count("-kf") == 0 &&
+			params.count(L"-kf") == 0 &&
 			_mode == XTEAMode::ENC
 			) {
 			// сгенерировать ключ-файл в той же директории что и результат шифрования (-of)
-			std::string s = params["-of"]; s += _KEYFILEEXT;
+			std::wstring s = params[L"-of"]; s += _KEYFILEEXT;
 			FileOutput* okf = new FileOutput(s.c_str());
 			this->gen(okf);
 			delete okf;
 		} else if (
-				params.count("-kf") == 0 &&
+				params.count(L"-kf") == 0 &&
 				_mode == XTEAMode::DEC
 			) {
 			// попытка прочитать файл в той же директории что и -if
-			std::string s = params["-if"]; s += _KEYFILEEXT;
-			_key = reedKeyFile(s.c_str());
+			std::wstring s = params[L"-if"]; s += _KEYFILEEXT;
+			_key = reedKeyFile(reinterpret_cast<const char*>(s.c_str()));
 		}
 	} catch (const encrypt::XTEA::XTEAMode& e)
 	{
@@ -257,30 +257,30 @@ void encrypt::XTEA::run()
 		this->gen(this->_of);
 		break;
 	case encrypt::XTEA::XTEAMode::NOOUTPUTGEN:
-		this->_ef->write(T::i()->getMsg({L"xtea",1}));
+		this->_ef->write(T::i()->msg({L"xtea",1}));
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::README:
-		this->_ef->write(T::i()->getMsg({L"xtea",2}));
+		this->_ef->write(T::i()->msg({L"xtea",2}));
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOMODE:
-		this->_ef->write(T::i()->getMsg({L"xtea",3}));
+		this->_ef->write(T::i()->msg({L"xtea",3}));
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOKFENC:
-		this->_ef->write(T::i()->getMsg({L"xtea",4}));
+		this->_ef->write(T::i()->msg({L"xtea",4}));
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOKFDEC:
-		this->_ef->write(T::i()->getMsg({L"xtea",5}));
+		this->_ef->write(T::i()->msg({L"xtea",5}));
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOACCESKF:
-		this->_ef->write(T::i()->getMsg({L"xtea",6}));
+		this->_ef->write(T::i()->msg({L"xtea",6}));
 		break;
 	case encrypt::XTEA::XTEAMode::NOFULLKF:
-		this->_ef->write(T::i()->getMsg({L"xtea",7}));
+		this->_ef->write(T::i()->msg({L"xtea",7}));
 		break;
 	}
 
@@ -288,7 +288,7 @@ void encrypt::XTEA::run()
 
 void encrypt::XTEA::readme()
 {
-	this->_ef->write(T::i()->getMsg({L"xtea",8}));
+	this->_ef->write(T::i()->msg({L"xtea",8}));
 }
 
 encrypt::XTEA::XTEAMode encrypt::XTEA::mode() const

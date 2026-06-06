@@ -2,10 +2,8 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Исходные файлы">
-      <UniqueIdentifier>{6d09db2e-c585-4b48-a4fc-2a7803e51b58}</UniqueIdentifier>
     </Filter>
     <Filter Include="Файлы заголовков">
-      <UniqueIdentifier>{927e2e82-4e19-41ba-a15a-296a2cf877dc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -13,7 +11,7 @@
     <ClCompile Include="src\encrypt\Algorithm.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="src\encrypt\AlgorithmStrategy.cpp">
+    <ClCompile Include="src\encrypt\Controller.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\encrypt\Ceasar.cpp">
@@ -37,6 +35,18 @@
     <ClCompile Include="src\encrypt\ConfigParser.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="src\encrypt\InterpretationMode.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\encrypt\EncryptReadme.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\encrypt\General.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\encrypt\KeystreamGenerator.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\encrypt\XTEA.h">
@@ -51,7 +61,7 @@
     <ClInclude Include="src\encrypt\Ceasar.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\encrypt\AlgorithmStrategy.h">
+    <ClInclude Include="src\encrypt\Controller.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\encrypt\Algorithm.h">
@@ -64,6 +74,18 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="src\encrypt\ConfigParser.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\encrypt\InterpretationMode.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\encrypt\EncryptReadme.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\encrypt\General.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\encrypt\KeystreamGenerator.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

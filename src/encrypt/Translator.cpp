@@ -22,7 +22,11 @@ encrypt::Translator::Translator(InputStrategy* localeSource, TranslatorParser* p
     : _localeSource(localeSource),
     _parser(parser)
 {
-    this->_msgs = this->_parser->extract(this->_localeSource);
+    if (!this->_parser) {
+        this->_msgs = {};
+    } else {
+        this->_msgs = this->_parser->extract(this->_localeSource);
+    }
 }
 
 encrypt::Translator::~Translator()
@@ -61,7 +65,7 @@ void encrypt::Translator::setLocaleSource(InputStrategy* lcs)
     this->_localeSource = lcs;
 }
 
-std::wstring encrypt::Translator::getMsg(std::pair<std::wstring, size_t> key)
+std::wstring encrypt::Translator::msg(std::pair<std::wstring, size_t> key)
 {
     //Первый запуск 
     if (_msgs.count(key) == 0) {
@@ -84,6 +88,7 @@ std::wstring encrypt::TranslatorParser::_trim(const std::wstring& str)
 
 std::map<std::pair<std::wstring, size_t>, std::wstring> encrypt::TranslatorParser::extract(InputStrategy* _if)
 {
+    //Попытка составить парсер через конечный автомат
     std::wstring line;
     std::map<std::pair<std::wstring, size_t>, std::wstring> _config;
     std::wstring alg{};

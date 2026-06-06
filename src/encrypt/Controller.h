@@ -13,25 +13,19 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-#include "AlgorithmStrategy.h"
-#include<sstream>
-#include "Translator.h"
-using T = encrypt::Translator;
-
-void encrypt::AlgorithmStrategy::setAlgorithm(Algorithm* alg)
-{
-	this->_alg = alg;
+#pragma once
+#include "Algorithm.h"
+namespace encrypt {
+	class Controller
+	{
+	private:
+		Algorithm* _alg = nullptr;
+	public:
+		Controller()=default;
+		void setAlgorithm(Algorithm*);
+		void doAlgorithm();
+		~Controller();
+	};
 }
 
-void encrypt::AlgorithmStrategy::doAlgorithm()
-{
-		_alg->run();
-}
-encrypt::AlgorithmStrategy::~AlgorithmStrategy()
-{
-	if(_alg) delete _alg;
-};
-void encrypt::AlgorithmStrategy::readme(OutputStrategy* out)
-{	  
-	out->write(T::i()->getMsg({L"encrypter",1}));
-}
+

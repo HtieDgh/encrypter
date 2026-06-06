@@ -14,7 +14,8 @@
    limitations under the License.
 */
 #include "Algorithm.h"
-
+#include<codecvt>
+#pragma warning(disable: 4996)   //отключения предупреждения о deprecated
 void encrypt::Algorithm::setOutput(OutputStrategy* s)
 {
 	if (this->_of) {
@@ -37,6 +38,23 @@ void encrypt::Algorithm::setErrOutput(OutputStrategy* s)
 		delete this->_ef;
 	}
 	this->_ef = s;
+}
+
+
+std::wstring encrypt::Algorithm::s2ws(const std::string& str)
+{
+	using convert_typeX = std::codecvt_utf8<wchar_t>;
+	std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+	return converterX.from_bytes(str);
+}
+
+std::string encrypt::Algorithm::ws2s(const std::wstring& wstr)
+{
+	using convert_typeX = std::codecvt_utf8<wchar_t>;
+	std::wstring_convert<convert_typeX, wchar_t> converterX;
+
+	return converterX.to_bytes(wstr);
 }
 
 encrypt::Algorithm::~Algorithm()

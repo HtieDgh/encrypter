@@ -26,7 +26,7 @@ namespace encrypt {
 		virtual void write(std::wstring data) = 0;
 	};
 
-	class StdoutOutput : public OutputStrategy {
+	class StdOutput : public OutputStrategy {
 	public:
 		void write(char* data, std::streamsize size = 1) override;
 		void write(wchar_t* data, std::streamsize size = 1) override;

@@ -24,7 +24,7 @@ namespace encrypt {
         uint32_t* _key = nullptr;
         size_t _maxsize = -1;	    // Макс размер в байтах после которого следует остановить шифрование
         uint32_t _nr = 32;          // Количество раундов Фестеля
-        const char _KEYFILEEXT[32] = ".key";
+        const wchar_t _KEYFILEEXT[32] = L".key";
         bool _done;			        //Момент когда работу можно завершить. Используются в run()
 
         void _encode(uint32_t* v);
@@ -46,7 +46,7 @@ namespace encrypt {
             README
         };
         XTEA();
-        XTEA(char* modename, std::map<std::string, const char*>& params, OutputStrategy* const errout);
+        XTEA(std::wstring modename, std::map<std::wstring, std::wstring>& params, OutputStrategy* const errout);
         ~XTEA() override;
 
         void gen(OutputStrategy* okf);
@@ -62,4 +62,3 @@ namespace encrypt {
         XTEAMode _mode;                // Различные режимы работы алгоритма
     };
 }
-

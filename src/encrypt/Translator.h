@@ -51,7 +51,7 @@ namespace encrypt
         void setLocaleSource(InputStrategy* lcs);
         
         //Получить данные перевода по [key] = {Имя алгоритма, id сообщения}
-        std::wstring getMsg(std::pair<std::wstring, size_t> key);
+        std::wstring msg(std::pair<std::wstring, size_t> key);
 
     };
 }
