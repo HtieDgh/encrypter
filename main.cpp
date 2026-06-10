@@ -1,5 +1,5 @@
 /*
-   Copyright 2025 Htie digital
+   Copyright 2026 Htie digital
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -33,6 +33,8 @@
 #define DEFAULT_LC_PATH  L"./lc"
 #define DEFAULT_LC_EXT  L".lc"
 #define DEFAULT_CFG_PATH L"./config.cfg"
+#define DEFAULT_CFG_CONTENT LR"end(locale=en-US
+)end"
 
 using namespace std;
 using namespace encrypt;
@@ -59,8 +61,10 @@ int wmain(int argc, wchar_t* argv[], wchar_t* envp[]){
 		
 		} catch (...)
 		{
-			errout->write(L"config file can't be opened, is it existing?");//TODO default strings should be hardcoded?
-			return -1;
+			errout->write(L"config file can't be opened, creating default");//TODO default strings should be hardcoded?
+			auto cfgOut=new FileOutput(DEFAULT_CFG_PATH);
+			cfgOut->write(DEFAULT_CFG_CONTENT);
+			delete cfgOut;
 		}
 		EncrypterConfigParser* ECP = new EncrypterConfigParser(FI);
 		delete FI;

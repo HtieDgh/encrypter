@@ -1,5 +1,5 @@
 /*
-   Copyright 2025 Htie digital
+   Copyright 2026 Htie digital
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ encrypt::FileInput::FileInput(const char* path, int openType)
 {
 	this->fin.open(path, openType);
 	if (!this->fin.is_open()) {
-		throw T::i()->msg({L"iostrategy",1});
+		throw T::msg({L"iostrategy",1});
 	}
 }
 
@@ -53,7 +53,7 @@ encrypt::FileInput::FileInput(std::wstring path, int openType)
 {
 	this->wfin.open(path, openType);
 	if (!this->wfin.is_open()) {
-		throw T::i()->msg({L"iostrategy",1});
+		throw T::msg({L"iostrategy",1});
 	}
 	// Установка "парсера" битов в соответствии с utf-8. По умолначнию считывает по 1 байту в каждый wchar - что бред, 
 	// теперь считывает по 2 байта - что правильно
@@ -63,7 +63,7 @@ encrypt::FileInput::FileInput(std::wstring path, int openType)
 long long encrypt::FileInput::read(char* data, std::streamsize size)
 {
 	if (!this->fin.is_open()) {
-		throw T::i()->msg({L"iostrategy",2});
+		throw T::msg({L"iostrategy",2});
 	}
 	return this->fin.read(data, size), this->fin.gcount();
 }
@@ -71,7 +71,7 @@ long long encrypt::FileInput::read(char* data, std::streamsize size)
 long long encrypt::FileInput::read(wchar_t* data, std::streamsize size)
 {
 	if (!this->wfin.is_open()) {
-		throw T::i()->msg({L"iostrategy",2});
+		throw T::msg({L"iostrategy",2});
 	}
 	return this->wfin.read(data, size), this->wfin.gcount();
 }
@@ -79,7 +79,7 @@ long long encrypt::FileInput::read(wchar_t* data, std::streamsize size)
 long long encrypt::FileInput::readln(std::string& data, char delim)
 {
 	if (!this->fin.is_open()) {
-		throw T::i()->msg({L"iostrategy",2});
+		throw T::msg({L"iostrategy",2});
 	}
 	if (std::getline(this->fin, data, delim)) {
 		return data.length();
@@ -91,7 +91,7 @@ long long encrypt::FileInput::readln(std::string& data, char delim)
 long long encrypt::FileInput::readln(std::wstring& data, wchar_t delim)
 {
 	if (!this->wfin.is_open()) {
-		throw T::i()->msg({L"iostrategy",2});
+		throw T::msg({L"iostrategy",2});
 	}
 	if (std::getline(this->wfin, data, delim)) {
 		return data.length();

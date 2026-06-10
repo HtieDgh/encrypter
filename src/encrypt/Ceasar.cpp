@@ -1,5 +1,5 @@
 /*
-   Copyright 2025 Htie digital
+   Copyright 2026 Htie digital
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -165,7 +165,7 @@ void encrypt::Ceasar::run()
 	case encrypt::Ceasar::CeasarMode::NOMODE:
 	case encrypt::Ceasar::CeasarMode::README:
 	case encrypt::Ceasar::CeasarMode::NOKEY:
-		this->_ef->write(T::i()->msg({L"ceasar",(size_t)_mode}));//свести enum к числу-идентификатору строки
+		this->_ef->write(T::msg({L"ceasar",(size_t)_mode}));//свести enum к числу-идентификатору строки
 		this->readme();
 		break;
 	}
@@ -184,7 +184,7 @@ void encrypt::Ceasar::mode(encrypt::Ceasar::CeasarMode mode)
 
 void encrypt::Ceasar::readme()
 {	
-	this->_ef->write(T::i()->msg({L"ceasar",4}));
+	this->_ef->write(T::msg({L"ceasar",4}));
 }
 
 encrypt::Ceasar::~Ceasar()

@@ -1,5 +1,5 @@
 /*
-   Copyright 2025 Htie digital
+   Copyright 2026 Htie digital
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -257,30 +257,30 @@ void encrypt::XTEA::run()
 		this->gen(this->_of);
 		break;
 	case encrypt::XTEA::XTEAMode::NOOUTPUTGEN:
-		this->_ef->write(T::i()->msg({L"xtea",1}));
+		this->_ef->write(T::msg({L"xtea",1}));
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::README:
-		this->_ef->write(T::i()->msg({L"xtea",2}));
+		this->_ef->write(T::msg({L"xtea",2}));
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOMODE:
-		this->_ef->write(T::i()->msg({L"xtea",3}));
+		this->_ef->write(T::msg({L"xtea",3}));
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOKFENC:
-		this->_ef->write(T::i()->msg({L"xtea",4}));
+		this->_ef->write(T::msg({L"xtea",4}));
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOKFDEC:
-		this->_ef->write(T::i()->msg({L"xtea",5}));
+		this->_ef->write(T::msg({L"xtea",5}));
 		this->readme();
 		break;
 	case encrypt::XTEA::XTEAMode::NOACCESKF:
-		this->_ef->write(T::i()->msg({L"xtea",6}));
+		this->_ef->write(T::msg({L"xtea",6}));
 		break;
 	case encrypt::XTEA::XTEAMode::NOFULLKF:
-		this->_ef->write(T::i()->msg({L"xtea",7}));
+		this->_ef->write(T::msg({L"xtea",7}));
 		break;
 	}
 
@@ -288,7 +288,7 @@ void encrypt::XTEA::run()
 
 void encrypt::XTEA::readme()
 {
-	this->_ef->write(T::i()->msg({L"xtea",8}));
+	this->_ef->write(T::msg({L"xtea",8}));
 }
 
 encrypt::XTEA::XTEAMode encrypt::XTEA::mode() const

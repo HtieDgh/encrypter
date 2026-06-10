@@ -1,5 +1,5 @@
 /*
-   Copyright 2025 Htie digital
+   Copyright 2026 Htie digital
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -144,7 +144,7 @@ encrypt::EncrypterConfig::EncrypterConfig(
         // Если не create то установить значения конфига по умолчанию
         if (this->_mode != encrypt::EncrypterConfig::ConfigMode::CREATE && _configParser->empty())
         {
-            this->_ef->write(T::i()->msg({L"encrypterconfig",3}));
+            this->_ef->write(T::msg({L"encrypterconfig",3}));
             this->setString(L"locale", L"ru-RU");
         }
 
@@ -174,7 +174,7 @@ encrypt::EncrypterConfig::~EncrypterConfig()
 
 void encrypt::EncrypterConfig::readme()
 {
-    this->_ef->write(T::i()->msg({L"encrypterconfig",4}));
+    this->_ef->write(T::msg({L"encrypterconfig",4}));
 }
 
 
@@ -239,11 +239,11 @@ void encrypt::EncrypterConfig::run()
         }
         break;
     case encrypt::EncrypterConfig::ConfigMode::README:
-        this->_ef->write(T::i()->msg({L"encrypterconfig",1}));
+        this->_ef->write(T::msg({L"encrypterconfig",1}));
         this->readme();
         break;
     case encrypt::EncrypterConfig::ConfigMode::NOMODE:
-        this->_ef->write(T::i()->msg({L"encrypterconfig",2}));
+        this->_ef->write(T::msg({L"encrypterconfig",2}));
         this->readme();
         break;
     default:

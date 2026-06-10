@@ -1,5 +1,5 @@
 /*
-   Copyright 2025 Htie digital
+   Copyright 2026 Htie digital
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -65,13 +65,17 @@ void encrypt::Translator::setLocaleSource(InputStrategy* lcs)
     this->_localeSource = lcs;
 }
 
-std::wstring encrypt::Translator::msg(std::pair<std::wstring, size_t> key)
+std::wstring encrypt::Translator::msg_(std::pair<std::wstring, size_t> key)
 {
     //Первый запуск 
     if (_msgs.count(key) == 0) {
         return L"NOT-TRANSLATED-YET";
     }
     return _msgs[key];
+}
+std::wstring encrypt::Translator::msg(std::pair<std::wstring, size_t> key)
+{
+    return encrypt::Translator::i()->msg_(key);
 }
 
 //====================================================================================

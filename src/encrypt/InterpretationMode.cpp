@@ -46,7 +46,7 @@ void encrypt::InterpretationMode::run()
 
 void encrypt::InterpretationMode::readme()
 {
-	this->_ef->write(T::i()->msg({L"interpritationmode",1}));
+	this->_ef->write(T::msg({L"interpritationmode",1}));
 }
 
 encrypt::InterpretationMode::InterpretationMode(std::wstring modename,InputStrategy* cmdsource, OutputStrategy* cmdoutput, OutputStrategy* modeoutput) noexcept

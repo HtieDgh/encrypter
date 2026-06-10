@@ -1,5 +1,5 @@
 /*
-   Copyright 2025 Htie digital
+   Copyright 2026 Htie digital
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ encrypt::FileOutput::FileOutput(const char* path, int openType)
 {
 	this->fout.open(path, openType);
 	if (!this->fout.is_open()) {
-		throw T::i()->msg({L"iostrategy",1});
+		throw T::msg({L"iostrategy",1});
 	}
 }
 
@@ -44,7 +44,7 @@ encrypt::FileOutput::FileOutput(const wchar_t* path, int openType)
 {
 	this->wfout.open(path, openType);
 	if (!this->wfout.is_open()) {
-		throw T::i()->msg({L"iostrategy",1});
+		throw T::msg({L"iostrategy",1});
 	}
 }
 
@@ -54,7 +54,7 @@ void encrypt::FileOutput::write(char* data, std::streamsize size)
 		this->fout.write(data, size);
 	}
 	else {
-		throw T::i()->msg({L"iostrategy",3});
+		throw T::msg({L"iostrategy",3});
 	}
 }
 
@@ -63,7 +63,7 @@ void encrypt::FileOutput::write(wchar_t* data, std::streamsize size)
 	if (this->wfout.is_open()) {
 		this->wfout.write(data, size);
 	} else {
-		throw T::i()->msg({L"iostrategy",3});
+		throw T::msg({L"iostrategy",3});
 	}
 }
 
@@ -72,7 +72,7 @@ void encrypt::FileOutput::write(std::wstring data)
 	if (this->wfout.is_open()) {
 		this->wfout << data;
 	} else {
-		throw T::i()->msg({L"iostrategy",3});
+		throw T::msg({L"iostrategy",3});
 	}
 }
 

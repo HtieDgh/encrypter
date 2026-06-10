@@ -1,5 +1,5 @@
 /*
-   Copyright 2025 Htie digital
+   Copyright 2026 Htie digital
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -47,11 +47,14 @@ namespace encrypt
             InputStrategy* lcs = nullptr,
             TranslatorParser* p = nullptr
         );
+        //Обертка над msg
+        static std::wstring msg(std::pair<std::wstring, size_t> key);
         void setTranslatorParser(TranslatorParser* p);
         void setLocaleSource(InputStrategy* lcs);
         
         //Получить данные перевода по [key] = {Имя алгоритма, id сообщения}
-        std::wstring msg(std::pair<std::wstring, size_t> key);
-
+        private:
+            std::wstring msg_(std::pair<std::wstring, size_t> key);
+       
     };
 }

@@ -44,6 +44,7 @@ The following algorithms are available {alg name}:
   
   ceasar
   xtea
+  chacha
 
 To edit the configuration file, explore:
   encypter config -?
@@ -101,7 +102,7 @@ $
 8=Usage:
   encrypter xtea {command} [option]
 
-comands:
+Commands:
   gen   Generate a key file for subsequent encryption.
         The - of option is required
   enc   Encrypt the file. If the -kf option is not 
@@ -145,4 +146,23 @@ List of algoritms are available in interpretation mode now:
   - ceasar
 $
 2=To get help enter "?"
+$
+
+#KeystreamGenerator
+[KeystreamGenerator]
+1=Usage:
+  encrypter chacha {command} [options]
+
+Commands:
+  gen   Generate key-gamma. Generates 16 bytes by default.
+
+Options:
+  -of "/path/to/gama.txt"    Specifing gamma output file
+  -kf "/path/to/key.txt"     Specifing 16 bytes size key file
+  {-size|-s} 16              Specifing size of gamma (in bytes)
+$
+2=-kf option is necessary 
+$
+#nomode
+3=No command was given
 $
